@@ -1,8 +1,18 @@
-.password
-
+# backend
+debug.log
 __pycache__/
 *.pyc
 
+# front end
+static
+coverage
+node_modules
+stats.json
+
+# deployment
+.password
+
+# cruft
 .idea
 .DS_Store
-
+npm-debug.log

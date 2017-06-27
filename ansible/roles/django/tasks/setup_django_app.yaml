@@ -8,10 +8,10 @@
     verify_host: yes
     rsync_opts:
       - "--exclude=*.pyc"
-      - "--exclude=__pycache__*"
-      - "--exclude=ansible*"
-      - "--exclude=docker*"
-      - "--exclude=media*"
+      - "--exclude=__pycache__"
+      - "--exclude=ansible"
+      - "--exclude=docker"
+      - "--exclude=media"
   tags: django
 
 - name: clear .pyc files
@@ -27,6 +27,21 @@
     owner: '{{ nginx_user }}'
     group: '{{ nginx_user }}'
     state: directory
+
+- name: copy static files
+  synchronize:
+    src: '{{ local_project_dir }}/static/'
+    dest: '{{ django_static_root }}'
+    recursive: yes
+    delete: yes
+
+- name: set ownership of static files to {{ nginx_user }}
+  file:
+    path: '{{ django_static_root }}'
+    owner: '{{ nginx_user }}'
+    group: '{{ nginx_user }}'
+    state: directory
+    recurse: yes
 
 - name: make sure media files dir exists
   file:

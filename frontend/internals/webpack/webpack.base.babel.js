@@ -5,11 +5,13 @@
 const path = require('path');
 const webpack = require('webpack');
 
+process.traceDeprecation = true;
+
 module.exports = (options) => ({
   entry: options.entry,
   output: Object.assign({ // Compile into js/build.js
-    path: path.resolve(process.cwd(), 'build'),
-    publicPath: '/',
+    path: path.resolve(process.cwd(), 'static'),
+    publicPath: '/static/',
   }, options.output), // Merge with env dependent settings
   module: {
     loaders: [{
@@ -37,8 +39,12 @@ module.exports = (options) => ({
           loader: 'image-webpack-loader',
           query: {
             progressive: true,
-            optimizationLevel: 7,
-            interlaced: false,
+            optipng: {
+              optimizationLevel: 7,
+            },
+            gifsicle: {
+              interlaced: false,
+            },
             pngquant: {
               quality: '65-90',
               speed: 4,

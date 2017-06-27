@@ -4,7 +4,7 @@
   "description": "A highly scalable, offline-first foundation with the best DX and a focus on performance and best practices",
   "repository": {
     "type": "git",
-    "url": "git://github.com/react-boilerplate/react-boilerplate.git"
+    "url": "git://github.com/mxstbr/react-boilerplate.git"
   },
   "engines": {
     "npm": ">=3",
@@ -15,34 +15,34 @@
   "scripts": {
     "analyze:clean": "rimraf stats.json",
     "preanalyze": "npm run analyze:clean",
-    "analyze": "node ./internals/scripts/analyze.js",
-    "extract-intl": "babel-node --presets latest,stage-0 -- ./internals/scripts/extract-intl.js",
-    "npmcheckversion": "node ./internals/scripts/npmcheckversion.js",
+    "analyze": "node ./frontend/internals/scripts/analyze.js",
+    "extract-intl": "babel-node --presets env,stage-0 -- ./frontend/internals/scripts/extract-intl.js",
+    "npmcheckversion": "node ./frontend/internals/scripts/npmcheckversion.js",
     "preinstall": "npm run npmcheckversion",
     "postinstall": "npm run build:dll",
     "prebuild": "npm run build:clean",
-    "build": "cross-env NODE_ENV=production webpack --config internals/webpack/webpack.prod.babel.js --color -p --progress",
-    "build:clean": "npm run test:clean && rimraf ./build",
-    "build:dll": "node ./internals/scripts/dependencies.js",
-    "start": "cross-env NODE_ENV=development node server",
+    "build": "cross-env NODE_ENV=production webpack --config frontend/internals/webpack/webpack.prod.babel.js --color -p --progress",
+    "build:clean": "npm run test:clean && rimraf ./static",
+    "build:dll": "node ./frontend/internals/scripts/dependencies.js",
+    "start": "cross-env NODE_ENV=development node frontend/server",
     "start:tunnel": "cross-env NODE_ENV=development ENABLE_TUNNEL=true node server",
     "start:production": "npm run test && npm run build && npm run start:prod",
     "start:prod": "cross-env NODE_ENV=production node server",
     "presetup": "npm i chalk shelljs",
-    "setup": "node ./internals/scripts/setup.js",
+    "setup": "node ./frontend/internals/scripts/setup.js",
     "postsetup": "npm run build:dll",
-    "clean": "shjs ./internals/scripts/clean.js",
+    "clean": "shjs ./frontend/internals/scripts/clean.js",
     "clean:all": "npm run analyze:clean && npm run test:clean && npm run build:clean",
-    "generate": "plop --plopfile internals/generators/index.js",
+    "generate": "plop --plopfile frontend/internals/generators/index.js",
     "lint": "npm run lint:js",
     "lint:eslint": "eslint --ignore-path .gitignore --ignore-pattern internals/scripts",
     "lint:js": "npm run lint:eslint -- . ",
     "lint:staged": "lint-staged",
     "pretest": "npm run test:clean && npm run lint",
-    "test:clean": "rimraf ./coverage",
+    "test:clean": "rimraf ./frontend/coverage",
     "test": "cross-env NODE_ENV=test jest --coverage",
     "test:watch": "cross-env NODE_ENV=test jest --watchAll",
-    "coveralls": "cat ./coverage/lcov.info | coveralls"
+    "coveralls": "cat ./frontend/coverage/lcov.info | coveralls"
   },
   "lint-staged": {
     "*.js": "lint:eslint"
@@ -51,7 +51,7 @@
   "babel": {
     "presets": [
       [
-        "latest",
+        "env",
         {
           "es2015": {
             "modules": false
@@ -159,7 +159,7 @@
     "settings": {
       "import/resolver": {
         "webpack": {
-          "config": "./internals/webpack/webpack.prod.babel.js"
+          "config": "./frontend/internals/webpack/webpack.prod.babel.js"
         }
       }
     }
@@ -242,7 +242,7 @@
     "babel-cli": "6.18.0",
     "babel-core": "6.21.0",
     "babel-eslint": "7.1.1",
-    "babel-loader": "6.2.10",
+    "babel-loader": "^7.1.0",
     "babel-plugin-dynamic-import-node": "1.0.0",
     "babel-plugin-react-intl": "2.2.0",
     "babel-plugin-react-transform": "2.0.2",
@@ -250,7 +250,7 @@
     "babel-plugin-transform-react-constant-elements": "6.9.1",
     "babel-plugin-transform-react-inline-elements": "6.8.0",
     "babel-plugin-transform-react-remove-prop-types": "0.2.11",
-    "babel-preset-latest": "6.16.0",
+    "babel-preset-env": "^1.5.2",
     "babel-preset-react": "6.16.0",
     "babel-preset-react-hmre": "1.1.1",
     "babel-preset-stage-0": "6.16.0",
@@ -272,7 +272,7 @@
     "file-loader": "0.9.0",
     "html-loader": "0.4.4",
     "html-webpack-plugin": "2.24.1",
-    "image-webpack-loader": "2.0.0",
+    "image-webpack-loader": "^3.3.1",
     "imports-loader": "0.6.5",
     "jest-cli": "18.0.0",
     "lint-staged": "3.2.1",
@@ -288,8 +288,8 @@
     "sinon": "2.0.0-pre",
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
-    "webpack": "2.2.0-rc.3",
-    "webpack-dev-middleware": "1.9.0",
-    "webpack-hot-middleware": "2.15.0"
+    "webpack": "^2.2.1",
+    "webpack-dev-middleware": "^1.11.0",
+    "webpack-hot-middleware": "^2.18.0"
   }
 }

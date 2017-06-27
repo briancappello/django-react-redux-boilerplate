@@ -7,7 +7,7 @@ const OfflinePlugin = require('offline-plugin');
 module.exports = require('./webpack.base.babel')({
   // In production, we skip all hot-reloading stuff
   entry: [
-    path.join(process.cwd(), 'app/app.js'),
+    path.join(process.cwd(), 'frontend/app/app.js'),
   ],
 
   // Utilize long-term caching by adding content hashes (not compilation hashes) to compiled assets
@@ -26,7 +26,7 @@ module.exports = require('./webpack.base.babel')({
 
     // Minify and optimize the index.html
     new HtmlWebpackPlugin({
-      template: 'app/index.html',
+      template: 'frontend/app/index.html',
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -47,10 +47,6 @@ module.exports = require('./webpack.base.babel')({
     new OfflinePlugin({
       relativePaths: false,
       publicPath: '/',
-
-      // No need to cache .htaccess. See http://mxs.is/googmp,
-      // this is applied before any match in `caches` section
-      excludes: ['.htaccess'],
 
       caches: {
         main: [':rest:'],
