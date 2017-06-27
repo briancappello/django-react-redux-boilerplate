@@ -1,0 +1,88 @@
+---
+- name: sync project code from local dir
+  synchronize:
+    src: '{{ local_project_dir }}'
+    dest: '{{ project_dir }}'
+    recursive: yes
+    delete: yes
+    verify_host: yes
+    rsync_opts:
+      - "--exclude=*.pyc"
+      - "--exclude=__pycache__*"
+      - "--exclude=ansible*"
+      - "--exclude=docker*"
+      - "--exclude=media*"
+  tags: django
+
+- name: clear .pyc files
+  command: find . -name '*.pyc' -delete
+  args:
+    chdir: '{{ project_dir }}'
+  changed_when: False
+  tags: django
+
+- name: make sure static files dir exists
+  file:
+    path: '{{ django_static_root }}'
+    owner: '{{ nginx_user }}'
+    group: '{{ nginx_user }}'
+    state: directory
+
+- name: make sure media files dir exists
+  file:
+    path: '{{ django_media_root }}'
+    owner: '{{ nginx_user }}'
+    group: '{{ nginx_user }}'
+    state: directory
+
+- name: install packages from requirements.txt
+  pip: virtualenv={{ virtualenv_dir }} requirements={{ requirements_path }}
+
+- name: Run the Django syncdb command
+  django_manage:
+    command: syncdb
+    app_path: '{{ project_dir }}'
+    virtualenv: '{{ virtualenv_dir }}'
+    settings: '{{ django_settings_module }}'
+  environment: '{{ django_environment }}'
+  when: run_django_syncdb is defined and run_django_syncdb
+  tags: django.syncdb
+
+- name: run django migrations
+  django_manage:
+    command: migrate
+    app_path: '{{ project_dir }}'
+    virtualenv: '{{ virtualenv_dir }}'
+    settings: '{{ django_settings_module }}'
+  environment: '{{ django_environment }}'
+  when: run_django_db_migrations is defined and run_django_db_migrations
+  tags: django.migrate
+
+- name: run django fixtures
+  django_manage:
+    command: loaddata
+    fixtures: '{{ project_dir }}/fixtures.json'
+    app_path: '{{ project_dir }}'
+    virtualenv: '{{ virtualenv_dir }}'
+    settings: '{{ django_settings_module }}'
+  environment: '{{ django_environment }}'
+  when: run_django_fixtures is defined and run_django_fixtures
+  tags: django.fixtures
+
+- name: Run Django collectstatic
+  django_manage:
+    command: collectstatic
+    app_path: '{{ project_dir }}'
+    virtualenv: '{{ virtualenv_dir }}'
+    settings: '{{ django_settings_module }}'
+  environment: '{{ django_environment }}'
+  when: run_django_collectstatic is defined and run_django_collectstatic
+  tags: django.collectstatic
+
+- name: set collected static files owned by {{ nginx_user }}
+  file:
+    path: '{{ django_static_root }}'
+    owner: '{{ nginx_user }}'
+    recurse: yes
+  when: run_django_collectstatic is defined and run_django_collectstatic
+  tags: django.collectstatic

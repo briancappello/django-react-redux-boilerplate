@@ -1,0 +1,4 @@
+---
+# FIXME pull these values from ansible-vault
+#django_secret_key: FIXME-vault
+#django_database_password: FIXME-vault

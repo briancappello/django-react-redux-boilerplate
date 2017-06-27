@@ -1,0 +1,12 @@
+[Unit]
+Description=uWSGI instance serving {{ app_name }}
+After=network.target
+
+[Service]
+ExecStart={{ virtualenv_dir }}/bin/uwsgi_start
+Restart=always
+RestartSec=5s
+KillSignal=SIGQUIT
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# configure static IP address
+iface_name="$(ip addr show | egrep '[0-9]: [a-z0-9]+[0-9]:' | cut -d ' ' -f 2 | cut -d ':' -f 1)"
+netconfig="/etc/network/interfaces"
+sed -i "s/ens2/$iface_name/" $netconfig
+sed -i "s/dhcp/static/" $netconfig
+echo "address STATIC_IP" >> $netconfig
+echo "netmask 255.255.255.0" >> $netconfig
+echo "gateway GATEWAY_IP" >> $netconfig
+echo "dns-nameservers 8.8.8.8 8.8.4.4" >> $netconfig
+
+# generate SSH keys
+ssh-keygen -t rsa -P '' -f /etc/ssh/ssh_host_rsa_key
+ssh-keygen -t ecdsa -P '' -f /etc/ssh/ssh_host_ecdsa_key
+ssh-keygen -t ed25519 -P '' -f /etc/ssh/ssh_host_ed25519_key
+
+# restart services
+systemctl restart networking
+systemctl restart sshd

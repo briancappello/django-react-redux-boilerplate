@@ -1,0 +1,3 @@
+[all]
+centos1.io app_domain=centos1.io run_django_fixtures=yes
+ubuntu1.io app_domain=ubuntu1.io run_django_fixtures=yes

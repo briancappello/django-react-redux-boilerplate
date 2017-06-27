@@ -1,0 +1,3 @@
+nginx_user: www-data
+nginx_sites_dir: /var/www/html
+nginx_default_site_filename: index.nginx-debian.html

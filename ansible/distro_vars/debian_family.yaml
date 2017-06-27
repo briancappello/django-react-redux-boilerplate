@@ -1,0 +1,8 @@
+---
+debian_family_deps:
+  - iptables-persistent
+  - acl
+
+# services: (systemd daemon names)
+cron_svc: cron
+ntp_svc: ntp

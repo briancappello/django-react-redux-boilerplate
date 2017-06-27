@@ -1,0 +1,64 @@
+---
+# project root dir on the local machine
+local_project_dir: '{{ inventory_dir }}/../'
+
+# project_name: the folder name of the django project
+project_name: drf-react-boilerplate
+
+# app_name: the folder name of the main app in the django project
+app_name: backend
+
+# app_env: the environment being deployed to (set in the hosts_<env> inventory files)
+# dev: use for deploying with ansible into a container/virtual machine
+# staging: use for deploying to staging in the cloud
+# prod: use for deploying to production in the cloud
+app_env: dev
+
+# app_domain: the domain to deploy to (set in the hosts_<env> inventory files)
+app_domain: example.com
+
+# the timezone to set the server to
+server_timezone: America/New_York
+
+# package names
+vim_pkg: vim
+ntp_pkg: ntp
+curl_pkg: curl
+
+# services (systemd daemon names)
+cron_svc: crond
+ntp_svc: ntpd
+nginx_svc: nginx
+
+# *********************************************************************************
+# Host Operating System variables used to control execution of specific tasks
+# NOTE: these are all set on a per-host basis, and are dependent upon gather_facts
+# *********************************************************************************
+
+# ==============
+# OS string vars
+# ==============
+
+os: "{{ ansible_distribution | lower }}"
+os_version: "{{ ansible_distribution_version }}"
+os_family: "{{ ansible_os_family | lower }}_family"
+
+# ===============
+# OS boolean vars
+# ===============
+
+# package managers
+apt: "{{ ansible_pkg_mgr == 'apt' }}"
+dnf: "{{ ansible_pkg_mgr == 'dnf' }}"
+yum: "{{ ansible_pkg_mgr == 'yum' }}"
+
+# specific distros
+centos: "{{ os == 'centos' }}"
+rhel: "{{ os == 'redhat' }}"
+debian: "{{ os == 'debian' }}"
+fedora: "{{ os == 'fedora' }}"
+ubuntu: "{{ os == 'ubuntu' }}"
+
+# distro families
+debian_family: "{{ os_family == 'debian_family' }}"
+redhat_family: "{{ os_family == 'redhat_family' }}"

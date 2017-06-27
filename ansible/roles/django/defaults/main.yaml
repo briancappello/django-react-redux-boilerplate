@@ -1,0 +1,54 @@
+---
+dependencies:
+  - '@Development Tools'
+  - python35u
+  - python35u-devel
+  - python35u-pip
+  - git
+
+python: python3.5
+pip: pip3.5
+
+python_path: '/usr/bin/{{ python }}'
+virtualenv_dir: '/virtualenvs/{{ app_name }}_env'
+project_dir: '{{ virtualenv_dir }}/{{ project_name }}'
+requirements_path: '{{ project_dir }}/requirements.txt'
+
+__all_the_env_vars__:
+  DJANGO_SETTINGS_MODULE: '{{ django_settings_module | default(omit) }}'
+  DJANGO_SECRET_KEY: '{{ django_secret_key | default(omit) }}'
+  DJANGO_DEBUG: '{{ django_debug | default(omit) }}'
+  DJANGO_DATABASE_NAME: '{{ django_database_name | default(omit) }}'
+  DJANGO_DATABASE_USER: '{{ django_database_user | default(omit) }}'
+  DJANGO_DATABASE_PASSWORD: '{{ django_database_password | default(omit) }}'
+  DJANGO_DATABASE_HOST: '{{ django_database_host | default(omit) }}'
+  DJANGO_DATABASE_PORT: '{{ django_database_port | default(omit) }}'
+  DJANGO_ALLOWED_HOSTS: '{{ django_allowed_hosts | default(omit) }}'
+  DJANGO_STATIC_ROOT: '{{ django_static_root | default(omit) }}'
+  DJANGO_MEDIA_ROOT: '{{ django_media_root | default(omit) }}'
+  DJANGO_USE_X_FORWARDED_HOST: '{{ django_use_x_forwarded_host | default(omit) }}'
+  DJANGO_TIMEZONE: '{{ django_timezone | default(omit) }}'
+  DJANGO_EMAIL_BACKEND: '{{ django_email_backend | default(omit) }}'
+  DJANGO_EMAIL_HOST: '{{ django_email_host | default(omit) }}'
+  DJANGO_EMAIL_PORT: '{{ django_email_port | default(omit) }}'
+  DJANGO_EMAIL_HOST_USER: '{{ django_email_host_user | default(omit) }}'
+  DJANGO_EMAIL_HOST_PASSWORD: '{{ django_email_host_password | default(omit) }}'
+  DJANGO_EMAIL_USE_TLS: '{{ django_email_use_tls | default(omit) }}'
+  DJANGO_EMAIL_USE_SSL: '{{ django_email_use_ssl | default(omit) }}'
+  DJANGO_EMAIL_TIMEOUT: '{{ django_email_timeout | default(omit) }}'
+  DJANGO_EMAIL_SSL_KEYFILE: '{{ django_email_ssl_keyfile | default(omit) }}'
+  DJANGO_EMAIL_SSL_CERTFILE: '{{ django_email_ssl_certfile | default(omit) }}'
+django_environment: '{{ __all_the_env_vars__ | filter_omitted }}'
+
+application_log_dir: '/var/log/{{ app_name }}'
+
+uwsgi_log_file: '{{ application_log_dir }}/uwsgi_supervisor.log'
+uwsgi_socket_path: '{{ project_dir }}/{{ app_name }}-uwsgi.sock'
+
+nginx_access_log_file: '{{ application_log_dir }}/nginx_access.log'
+nginx_error_log_file: '{{ application_log_dir }}/nginx_error.log'
+
+run_django_syncdb: no
+run_django_db_migrations: yes
+run_django_fixtures: no
+run_django_collectstatic: no

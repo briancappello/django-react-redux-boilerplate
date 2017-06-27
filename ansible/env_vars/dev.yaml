@@ -1,0 +1,3 @@
+---
+django_debug: 'True'
+django_email_port: '1025'

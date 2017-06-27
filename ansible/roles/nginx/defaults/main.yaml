@@ -1,0 +1,10 @@
+nginx_pkg: nginx
+nginx_svc: nginx
+
+nginx_user: nginx
+nginx_log_dir: /var/log/nginx
+nginx_sites_dir: /usr/share/nginx/html
+nginx_conf_dir: /etc/nginx
+nginx_conf: '{{ nginx_conf_dir }}/nginx.conf'
+nginx_sites_available_dir: '{{ nginx_conf_dir }}/sites-available'
+nginx_sites_enabled_dir: '{{ nginx_conf_dir }}/sites-enabled'
