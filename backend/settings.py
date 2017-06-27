@@ -75,8 +75,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('DJANGO_DATABASE_NAME', 'drf_boilerplate'),
+        'USER': os.getenv('DJANGO_DATABASE_USER', 'drf_boilerplate'),
+        'PASSWORD': os.getenv('DJANGO_DATABASE_PASSWORD', 'drf_boilerplate'),
+        'HOST': os.getenv('DJANGO_DATABASE_HOST', '127.0.0.1'),
+        'PORT': os.getenv('DJANGO_DATABASE_PORT', 5432),
     }
 }
 
