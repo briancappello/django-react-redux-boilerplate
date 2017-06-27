@@ -10,7 +10,7 @@ python: python3.5
 pip: pip3.5
 
 python_path: '/usr/bin/{{ python }}'
-virtualenv_dir: '/virtualenvs/{{ app_name }}_env'
+virtualenv_dir: '/virtualenvs/{{ project_name }}-env'
 project_dir: '{{ virtualenv_dir }}/{{ project_name }}'
 requirements_path: '{{ project_dir }}/requirements.txt'
 
@@ -40,10 +40,10 @@ __all_the_env_vars__:
   DJANGO_EMAIL_SSL_CERTFILE: '{{ django_email_ssl_certfile | default(omit) }}'
 django_environment: '{{ __all_the_env_vars__ | filter_omitted }}'
 
-application_log_dir: '/var/log/{{ app_name }}'
+application_log_dir: '/var/log/{{ project_name }}'
 
 uwsgi_log_file: '{{ application_log_dir }}/uwsgi_supervisor.log'
-uwsgi_socket_path: '{{ project_dir }}/{{ app_name }}-uwsgi.sock'
+uwsgi_socket_path: '/var/run/uwsgi/{{ project_name }}.sock'
 
 nginx_access_log_file: '{{ application_log_dir }}/nginx_access.log'
 nginx_error_log_file: '{{ application_log_dir }}/nginx_error.log'

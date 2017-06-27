@@ -10,6 +10,7 @@ master          = true
 processes       = 10
 socket          = {{ uwsgi_socket_path }}
 chmod-socket    = 664
+chown-socket    = {{ nginx_user }}:{{ nginx_user }}
 uid             = {{ nginx_user }}
 gid             = {{ nginx_user }}
 vacuum          = true

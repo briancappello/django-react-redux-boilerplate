@@ -1,9 +1,11 @@
 [Unit]
-Description=uWSGI instance serving {{ app_name }}
+Description=uWSGI instance serving {{ project_name }}
 After=network.target
 
 [Service]
+Type=notify
 ExecStart={{ virtualenv_dir }}/bin/uwsgi_start
+RuntimeDirectory=uwsgi
 Restart=always
 RestartSec=5s
 KillSignal=SIGQUIT

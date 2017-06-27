@@ -24,6 +24,7 @@
   template:
     src: uwsgi.ini.j2
     dest: '{{ project_dir }}/uwsgi.ini'
+  tags: django
 
 - name: create nginx uwsgi site config
   template:
@@ -41,7 +42,7 @@
 - name: create uwsgi systemd service
   template:
     src: uwsgi.systemd.j2
-    dest: /lib/systemd/system/{{ app_name }}.service
+    dest: /lib/systemd/system/{{ project_name }}.service
   register: uwsgi_service
 
 - name: reload systemd
@@ -49,4 +50,4 @@
   when: uwsgi_service | changed
 
 - name: (re)start and enable uwsgi systemd service
-  service: name={{ app_name }} state=restarted enabled=yes
+  service: name={{ project_name }} state=restarted enabled=yes
