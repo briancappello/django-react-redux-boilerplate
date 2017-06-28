@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import datetime
 
 
 def get_boolean_env(name, default):
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'rest_framework',
+    'knox',
 
     'app.apps.AppConfig',
 ]
@@ -160,10 +162,18 @@ MEDIA_ROOT = os.getenv('DJANGO_MEDIA_ROOT',
 # DRF
 # http://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ],
     'PAGE_SIZE': 10,
+}
+
+REST_KNOX = {
+    'TOKEN_TTL': datetime.timedelta(hours=24),
+    'USER_SERIALIZER': 'app.serializers.UserSerializer',
 }
 
 # Email

@@ -5,6 +5,8 @@ dependencies:
   - python35u-devel
   - python35u-pip
   - git
+  - libffi-devel
+  - openssl-devel
 
 python: python3.5
 pip: pip3.5

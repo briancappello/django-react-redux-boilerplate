@@ -5,5 +5,7 @@ dependencies:
   - python3.5-dev
   - python3-pip
   - git
+  - libffi-dev
+  - libssl-dev
 
 pip: pip3
