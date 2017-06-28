@@ -1,6 +1,6 @@
 /*
  *
- * Auth
+ * LoginPage
  *
  */
 
@@ -11,7 +11,7 @@ import { createStructuredSelector } from 'reselect';
 import makeSelectAuth from './selectors';
 import messages from './messages';
 
-export class Auth extends React.Component { // eslint-disable-line react/prefer-stateless-function
+export class LoginPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
       <div>
@@ -21,12 +21,12 @@ export class Auth extends React.Component { // eslint-disable-line react/prefer-
   }
 }
 
-Auth.propTypes = {
+LoginPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
-  Auth: makeSelectAuth(),
+  LoginPage: makeSelectAuth(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -35,4 +35,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
