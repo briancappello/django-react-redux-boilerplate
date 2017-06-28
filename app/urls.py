@@ -1,19 +1,8 @@
-from django.conf.urls import url
-
-from rest_framework.urlpatterns import format_suffix_patterns
+from rest_framework import routers
 
 from . import views
 
-user_list = views.UserViewSet.as_view({
-    'get': 'list',
-})
-user_detail = views.UserViewSet.as_view({
-    'get': 'retrieve',
-})
+router = routers.SimpleRouter()
+router.register(r'users', views.UserViewSet)
 
-urlpatterns = [
-    url(r'^$', user_list, name='user-list'),
-    url(r'^(?P<pk>[0-9]+)/?$', user_detail, name='user-detail'),
-]
-
-urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns = router.urls
