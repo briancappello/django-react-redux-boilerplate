@@ -26,6 +26,9 @@ from .models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 
 # Automagic:
 class SnippetSerializer(serializers.ModelSerializer):
+    created_by = serializers.ReadOnlyField(source='created_by.username')
+
     class Meta:
         model = Snippet
-        fields = ('id', 'title', 'code', 'line_nums', 'language', 'style')
+        fields = ('id', 'title', 'code', 'line_nums', 'language', 'style',
+                  'created_by')
