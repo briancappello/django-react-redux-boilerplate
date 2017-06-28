@@ -21,6 +21,7 @@ from app import views as app_views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/users/?', include('app.urls')),
     url(r'^api/', include('snippets.urls')),
     url(r'', app_views.IndexView.as_view(), name='index'),
 ]
