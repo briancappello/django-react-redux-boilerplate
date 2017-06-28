@@ -35,8 +35,8 @@
     "clean:all": "npm run analyze:clean && npm run test:clean && npm run build:clean",
     "generate": "plop --plopfile frontend/internals/generators/index.js",
     "lint": "npm run lint:js",
-    "lint:eslint": "eslint --ignore-path .gitignore --ignore-pattern internals/scripts",
-    "lint:js": "npm run lint:eslint -- . ",
+    "lint:eslint": "eslint --ignore-path .gitignore --ignore-pattern frontend/internals/scripts",
+    "lint:js": "npm run lint:eslint -- frontend",
     "lint:staged": "lint-staged",
     "pretest": "npm run test:clean && npm run lint",
     "test:clean": "rimraf ./frontend/coverage",
@@ -128,6 +128,7 @@
           "SwitchCase": 1
         }
       ],
+      "semi": 0,
       "jsx-a11y/aria-props": 2,
       "jsx-a11y/heading-has-content": 0,
       "jsx-a11y/href-no-hash": 2,
