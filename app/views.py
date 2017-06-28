@@ -3,7 +3,7 @@ import os
 from django.http import HttpResponse
 from django.views.generic import View
 
-from rest_framework import generics
+from rest_framework import viewsets
 
 from backend import settings
 from .models import User
@@ -17,11 +17,6 @@ class IndexView(View):
             return HttpResponse(content=index.read())
 
 
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(generics.RetrieveAPIView):
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
