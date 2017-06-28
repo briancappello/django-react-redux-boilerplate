@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
 
-    'app',
+    'app.apps.AppConfig',
+    'snippets.apps.SnippetsConfig',
 ]
 
 MIDDLEWARE = [
@@ -155,6 +156,14 @@ STATICFILES_FINDERS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.getenv('DJANGO_MEDIA_ROOT',
                        os.path.join(BASE_DIR, 'media'))
+
+# DRF
+# http://www.django-rest-framework.org/api-guide/settings/
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ],
+}
 
 # Email
 # https://docs.djangoproject.com/en/1.8/topics/email/#obtaining-an-instance-of-an-email-backend
