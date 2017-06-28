@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Snippet
+from ..models import Snippet
 
 
 class SnippetSerializer(serializers.HyperlinkedModelSerializer):

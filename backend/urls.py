@@ -16,16 +16,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from app import views as app_views
-from snippets import views as snippet_views
-
-
-
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api/$', snippet_views.api_root),
-    url(r'^api/', include('app.urls')),
-    url(r'^api/', include('snippets.urls')),
-    url(r'', app_views.IndexView.as_view(), name='index'),
+    url(r'', include('app.urls')),
 ]
