@@ -34,9 +34,8 @@
     "clean": "shjs ./frontend/internals/scripts/clean.js",
     "clean:all": "npm run analyze:clean && npm run test:clean && npm run build:clean",
     "generate": "plop --plopfile frontend/internals/generators/index.js",
-    "lint": "npm run lint:js",
-    "lint:eslint": "eslint --ignore-path .gitignore --ignore-pattern frontend/internals/scripts",
-    "lint:js": "npm run lint:eslint -- frontend",
+    "lint": "npm run lint:js --silent || true",
+    "lint:js": "eslint --ignore-path .gitignore --ignore-pattern frontend/internals/scripts frontend",
     "lint:staged": "lint-staged",
     "pretest": "npm run test:clean && npm run lint",
     "test:clean": "rimraf ./frontend/coverage",
@@ -45,7 +44,7 @@
     "coveralls": "cat ./frontend/coverage/lcov.info | coveralls"
   },
   "lint-staged": {
-    "*.js": "lint:eslint"
+    "*.js": "lint:js"
   },
   "pre-commit": "lint:staged",
   "babel": {
@@ -146,10 +145,9 @@
       "prefer-template": 2,
       "class-methods-use-this": 0,
       "react/forbid-prop-types": 0,
-      "react/jsx-first-prop-new-line": [
-        2,
-        "multiline"
-      ],
+      "react/jsx-indent": 0,
+      "react/jsx-indent-props": 0,
+      "react/jsx-first-prop-new-line": 0,
       "react/jsx-filename-extension": 0,
       "react/jsx-no-target-blank": 0,
       "react/require-extension": 0,
