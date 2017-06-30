@@ -1,13 +1,10 @@
 import React, { PropTypes } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { createStructuredSelector } from 'reselect'
 import { selectToken } from 'containers/Auth/selectors'
 import { logout } from 'containers/Auth/actions'
 import { preventDefault } from 'utils'
-
-import messages from './messages';
 
 export class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -20,19 +17,11 @@ export class Header extends React.Component { // eslint-disable-line react/prefe
     const { token } = this.props
     return (
       <div>
-        <Link to="/">
-          <FormattedMessage {...messages.home} />
-        </Link>
-        <Link to="/features">
-          <FormattedMessage {...messages.features} />
-        </Link>
+        <Link to="/">Home</Link>
+        <Link to="/features">Features</Link>
         { token
-          ? <Link href="/logout" onClick={this.props.onLogout}>
-              <FormattedMessage {...messages.logout} />
-            </Link>
-          : <Link to="/login">
-              <FormattedMessage {...messages.login} />
-            </Link>
+          ? <Link href="/logout" onClick={this.props.onLogout}>Logout</Link>
+          : <Link to="/login">Login</Link>
         }
       </div>
     );

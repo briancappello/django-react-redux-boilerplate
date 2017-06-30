@@ -4,9 +4,6 @@
 
 import React from 'react';
 import Helmet from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
-
-import messages from './messages';
 
 export class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   render() {
@@ -19,14 +16,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
           ]}
         />
         <div>
-          <div className="center">
-            <h2>
-              <FormattedMessage {...messages.startProjectHeader} />
-            </h2>
-            <p>
-              <FormattedMessage {...messages.startProjectMessage} />
-            </p>
-          </div>
+          <h1>Home</h1>
         </div>
       </article>
     );

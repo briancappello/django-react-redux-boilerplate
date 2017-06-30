@@ -27,7 +27,7 @@ module.exports = {
   }, {
     type: 'confirm',
     name: 'wantHeaders',
-    default: false,
+    default: true,
     message: 'Do you want headers?',
   }, {
     type: 'confirm',
@@ -39,11 +39,6 @@ module.exports = {
     name: 'wantSagas',
     default: true,
     message: 'Do you want sagas for asynchronous flows? (e.g. fetching data)',
-  }, {
-    type: 'confirm',
-    name: 'wantMessages',
-    default: true,
-    message: 'Do you want i18n messages (i.e. will this component use text)?',
   }],
   actions: (data) => {
     // Generate index.js and index.test.js
@@ -58,16 +53,6 @@ module.exports = {
       templateFile: './container/test.js.hbs',
       abortOnFail: true,
     }];
-
-    // If component wants messages
-    if (data.wantMessages) {
-      actions.push({
-        type: 'add',
-        path: '../../app/containers/{{properCase name}}/messages.js',
-        templateFile: './container/messages.js.hbs',
-        abortOnFail: true,
-      });
-    }
 
     // If they want actions and a reducer, generate actions.js, constants.js,
     // reducer.js and the corresponding tests for actions and the reducer

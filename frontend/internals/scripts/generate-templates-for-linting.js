@@ -33,17 +33,17 @@ const removeTestsDirFrom = (relativePath) => () => rimraf.sync(path.join(__dirna
 const plop = nodePlop('./index');
 
 const componentGen = plop.getGenerator('component');
-const ComponentEsclass = componentGen.runActions({ name: 'RbGeneratedComponentEsclass', type: 'ES6 Class', wantMessages: true })
+const ComponentEsclass = componentGen.runActions({ name: 'RbGeneratedComponentEsclass', type: 'ES6 Class' })
   .then(checkForErrors)
   .then(removeTestsDirFrom('components/RbGeneratedComponentEsclass'))
   .catch(reportErrorsFor('component/ES6 Class'));
 
-componentGen.runActions({ name: 'RbGeneratedComponentEsclasspure', type: 'ES6 Class (Pure)', wantMessages: true })
+componentGen.runActions({ name: 'RbGeneratedComponentEsclasspure', type: 'ES6 Class (Pure)' })
   .then(checkForErrors)
   .then(removeTestsDirFrom('components/RbGeneratedComponentEsclasspure'))
   .catch(reportErrorsFor('component/ES6 Class (Pure)'));
 
-componentGen.runActions({ name: 'RbGeneratedComponentStatelessfunction', type: 'Stateless Function', wantMessages: true })
+componentGen.runActions({ name: 'RbGeneratedComponentStatelessfunction', type: 'Stateless Function' })
   .then(checkForErrors)
   .then(removeTestsDirFrom('components/RbGeneratedComponentStatelessfunction'))
   .catch(reportErrorsFor('component/Stateless Function'));
@@ -55,7 +55,6 @@ containerGen.runActions({
   wantHeaders: true,
   wantActionsAndReducer: true,
   wantSagas: true,
-  wantMessages: true
 })
   .then(checkForErrors)
   .then(removeTestsDirFrom('containers/RbGeneratedContainerPureComponent'))
@@ -67,7 +66,6 @@ const ContainerComponent = containerGen.runActions({
   wantHeaders: true,
   wantActionsAndReducer: true,
   wantSagas: true,
-  wantMessages: true
 })
   .then(checkForErrors)
   .then(removeTestsDirFrom('containers/RbGeneratedContainerComponent'))

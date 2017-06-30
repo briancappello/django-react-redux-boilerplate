@@ -7,36 +7,35 @@
 import React, { PropTypes } from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { preventDefault } from 'utils'
+import LoadingComponent from 'components/LoadingIndicator'
 
 import { changeUsername, changePassword, login } from './actions'
 import { selectLoading, selectError, selectForm } from './selectors';
-import messages from './messages';
 
 export class LoginPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   static propTypes = {
-    error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+    loading: PropTypes.bool.isRequired,
+    error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
     form: PropTypes.shape({
       username: PropTypes.string,
       password: PropTypes.string,
-    }),
+    }).isRequired,
     onSubmit: PropTypes.func.isRequired,
     onUsernameChange: PropTypes.func.isRequired,
     onPasswordChange: PropTypes.func.isRequired,
   }
 
   render() {
-    const { error, form } = this.props
+    const { loading, error, form } = this.props
+
     return (
       <div className="login-page">
         <Helmet title="Login" />
-        <h1>
-          <FormattedMessage {...messages.header} />
-        </h1>
-        <div>
+        <h1>Login</h1>
+        { loading ? <LoadingComponent /> :
           <form onSubmit={this.props.onSubmit}>
             {error
               ? <div className="error">
@@ -45,9 +44,7 @@ export class LoginPage extends React.Component { // eslint-disable-line react/pr
               : ''
             }
             <div>
-              <label htmlFor="username">
-                <FormattedMessage {...messages.usernameField} />
-              </label>
+              <label htmlFor="username">Username:</label>
               <input id="username"
                      type="text"
                      value={form.username}
@@ -55,9 +52,7 @@ export class LoginPage extends React.Component { // eslint-disable-line react/pr
               />
             </div>
             <div>
-              <label htmlFor="password">
-                <FormattedMessage {...messages.passwordField} />
-              </label>
+              <label htmlFor="password">Password:</label>
               <input id="password"
                      type="password"
                      value={form.password}
@@ -66,7 +61,7 @@ export class LoginPage extends React.Component { // eslint-disable-line react/pr
             </div>
             <button type="submit" className="btn btn-primary">Submit</button>
           </form>
-        </div>
+        }
       </div>
     );
   }
