@@ -18,7 +18,7 @@ import messages from './messages';
 export class LoginPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   static propTypes = {
-    error: PropTypes.string,
+    error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     form: PropTypes.shape({
       username: PropTypes.string,
       password: PropTypes.string,

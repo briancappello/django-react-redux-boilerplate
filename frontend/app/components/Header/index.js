@@ -1,16 +1,12 @@
 import React, { PropTypes } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux'
+import { Link } from 'react-router'
 import { createStructuredSelector } from 'reselect'
 import { selectToken } from 'containers/Auth/selectors'
 import { logout } from 'containers/Auth/actions'
 import { preventDefault } from 'utils'
 
-import A from './A';
-import Img from './Img';
-import NavBar from './NavBar';
-import HeaderLink from './HeaderLink';
-import Banner from './banner.jpg';
 import messages from './messages';
 
 export class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -24,25 +20,20 @@ export class Header extends React.Component { // eslint-disable-line react/prefe
     const { token } = this.props
     return (
       <div>
-        <A href="https://twitter.com/mxstbr">
-          <Img src={Banner} alt="react-boilerplate - Logo" />
-        </A>
-        <NavBar>
-          <HeaderLink to="/">
-            <FormattedMessage {...messages.home} />
-          </HeaderLink>
-          <HeaderLink to="/features">
-            <FormattedMessage {...messages.features} />
-          </HeaderLink>
-          { token
-            ? <HeaderLink href="/logout" onClick={this.props.onLogout}>
-                <FormattedMessage {...messages.logout} />
-              </HeaderLink>
-            : <HeaderLink to="/login">
-                <FormattedMessage {...messages.login} />
-              </HeaderLink>
-          }
-        </NavBar>
+        <Link to="/">
+          <FormattedMessage {...messages.home} />
+        </Link>
+        <Link to="/features">
+          <FormattedMessage {...messages.features} />
+        </Link>
+        { token
+          ? <Link href="/logout" onClick={this.props.onLogout}>
+              <FormattedMessage {...messages.logout} />
+            </Link>
+          : <Link to="/login">
+              <FormattedMessage {...messages.login} />
+            </Link>
+        }
       </div>
     );
   }
