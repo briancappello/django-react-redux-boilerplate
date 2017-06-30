@@ -33,6 +33,8 @@ import '!file-loader?name=[name].[ext]!./favicon.ico';
 import '!file-loader?name=[name].[ext]!./manifest.json';
 /* eslint-enable import/no-webpack-loader-syntax */
 
+import authSagas from 'containers/Auth/sagas'
+
 import configureStore from './store';
 
 // Import i18n messages
@@ -61,6 +63,8 @@ openSansObserver.load().then(() => {
 // e.g. `const browserHistory = useRouterHistory(createBrowserHistory)();`
 const initialState = {};
 const store = configureStore(initialState, browserHistory);
+
+authSagas.map(store.runSaga)
 
 // Sync history and store, as the react-router-redux reducer
 // is under the non-default key ("routing"), selectLocationState
