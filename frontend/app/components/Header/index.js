@@ -13,7 +13,7 @@ import HeaderLink from './HeaderLink';
 import Banner from './banner.jpg';
 import messages from './messages';
 
-class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
+export class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   static propTypes = {
     token: PropTypes.string,
