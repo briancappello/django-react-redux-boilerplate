@@ -4,6 +4,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 process.traceDeprecation = true;
 
@@ -53,6 +54,20 @@ module.exports = (options) => ({
         },
       ],
     }, {
+      test: /\.scss$/,
+      use: ExtractTextPlugin.extract({
+        use: [
+          { loader: 'css-loader' },
+          {
+            loader: 'sass-loader',
+            options: {
+              data: `@import "${__dirname}/../../app/styles/_variables.scss";`,
+            },
+          },
+        ],
+        fallback: 'style-loader',
+      }),
+    }, {
       test: /\.html$/,
       loader: 'html-loader',
     }, {
@@ -67,6 +82,11 @@ module.exports = (options) => ({
     }],
   },
   plugins: options.plugins.concat([
+    new ExtractTextPlugin({
+      filename: '[name].[contenthash].css',
+      disable: process.env.NODE_ENV !== 'production',
+    }),
+
     new webpack.ProvidePlugin({
       // make fetch available
       fetch: 'exports-loader?self.fetch!whatwg-fetch',
