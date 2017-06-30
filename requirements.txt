@@ -2,6 +2,7 @@ asn1crypto==0.22.0
 cffi==1.10.0
 cryptography==1.9
 Django==1.11.2
+django-cors-headers==2.1.0
 django-extensions==1.7.9
 django-rest-knox==3.0.0
 djangorestframework==3.6.3
