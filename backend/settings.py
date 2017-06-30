@@ -165,7 +165,7 @@ MEDIA_ROOT = os.getenv('DJANGO_MEDIA_ROOT',
 # http://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
@@ -173,6 +173,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
+# Rest Knox
+# https://james1345.github.io/django-rest-knox/settings/
 REST_KNOX = {
     'TOKEN_TTL': datetime.timedelta(hours=24),
     'USER_SERIALIZER': 'app.serializers.UserSerializer',
