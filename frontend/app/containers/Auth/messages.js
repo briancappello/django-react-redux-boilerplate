@@ -10,4 +10,12 @@ export default defineMessages({
     id: 'app.containers.LoginPage.header',
     defaultMessage: 'This is LoginPage container !',
   },
+  usernameField: {
+    id: 'app.LoginPage.usernameField',
+    defaultMessage: 'Username:',
+  },
+  passwordField: {
+    id: 'app.LoginPage.passwordField',
+    defaultMessage: 'Password:',
+  },
 });

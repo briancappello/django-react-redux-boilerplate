@@ -3,23 +3,42 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the auth state domain
  */
-const selectAuthDomain = () => (state) => state.get('auth');
+const selectAuthDomain = (state) => state.get('auth')
 
 /**
  * Other specific selectors
  */
+export const selectForm = () => createSelector(
+  selectAuthDomain,
+  (state) => state.get('form')
+)
 
+export const selectLoading = () => createSelector(
+  selectAuthDomain,
+  (state) => state.get('loading')
+)
+
+export const selectError = () => createSelector(
+  selectAuthDomain,
+  (state) => state.get('error')
+)
+
+export const selectUser = () => createSelector(
+  selectAuthDomain,
+  (state) => state.get('user')
+)
+
+export const selectToken = () => createSelector(
+  selectAuthDomain,
+  (substate) => substate.get('token')
+)
 
 /**
  * Default selector used by Auth
  */
-
-const makeSelectAuth = () => createSelector(
-  selectAuthDomain(),
+export const makeSelectAuth = () => createSelector(
+  selectAuthDomain,
   (substate) => substate.toJS()
 );
 
 export default makeSelectAuth;
-export {
-  selectAuthDomain,
-};
