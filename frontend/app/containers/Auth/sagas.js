@@ -1,9 +1,11 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { SubmissionError } from 'redux-form/immutable';
 
 import { SERVER_URL } from 'config'
 import { post, authedPost } from 'utils/request'
-import { LOGIN, LOGOUT } from './constants'
-import { loginSuccess, loginError, logoutSuccess, logoutError } from './actions'
+
+import { LOGOUT } from './constants'
+import { login, logoutSuccess, logoutError } from './actions'
 import { selectToken } from './selectors'
 
 function _persistUserToken(user, token) {
@@ -16,21 +18,22 @@ function _removeUserToken() {
   localStorage.removeItem('token')
 }
 
-export function* login({ username, password }) {
+export function* handleLogin({ payload: { username, password } }) {
   const loginUrl = `${SERVER_URL}/api/auth/login/`
 
   try {
     const { user, token } = yield call(post, loginUrl, { username, password })
     _persistUserToken(user, token)
-    yield put(loginSuccess(user, token))
+    yield put(login.success({ user, token }))
   } catch (error) {
     _removeUserToken()
     const { response } = error
-    yield put(loginError(response.error))
+    const formError = new SubmissionError({ _error: response.error })
+    yield put(login.failure(formError))
   }
 }
 
-export function* logout() {
+export function* handleLogout() {
   const logoutUrl = `${SERVER_URL}/api/auth/logout/`
   const token = yield select(selectToken())
 
@@ -45,11 +48,11 @@ export function* logout() {
 }
 
 export function* loginSaga() {
-  yield takeLatest(LOGIN, login)
+  yield takeLatest(login.REQUEST, handleLogin)
 }
 
 export function* logoutSaga() {
-  yield takeLatest(LOGOUT, logout)
+  yield takeLatest(LOGOUT, handleLogout)
 }
 
 export default [

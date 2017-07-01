@@ -8,11 +8,6 @@ const selectAuthDomain = (state) => state.get('auth')
 /**
  * Other specific selectors
  */
-export const selectError = () => createSelector(
-  selectAuthDomain,
-  (state) => state.get('error')
-)
-
 export const selectUser = () => createSelector(
   selectAuthDomain,
   (state) => state.get('user')

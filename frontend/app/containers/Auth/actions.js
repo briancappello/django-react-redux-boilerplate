@@ -1,40 +1,16 @@
 /*
- *
  * Auth actions
- *
  */
+import { createFormAction } from 'redux-form-saga'
 
 import {
   LOGIN,
-  LOGIN_SUCCESS,
-  LOGIN_ERROR,
   LOGOUT,
   LOGOUT_SUCCESS,
   LOGOUT_ERROR,
 } from './constants'
 
-export function login(username, password) {
-  return {
-    type: LOGIN,
-    username,
-    password,
-  }
-}
-
-export function loginSuccess(user, token) {
-  return {
-    type: LOGIN_SUCCESS,
-    user,
-    token,
-  }
-}
-
-export function loginError(error) {
-  return {
-    type: LOGIN_ERROR,
-    error,
-  }
-}
+export const login = createFormAction(LOGIN)
 
 export function logout() {
   return {

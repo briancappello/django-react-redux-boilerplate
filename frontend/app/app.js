@@ -16,6 +16,7 @@ import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
+import { formActionSaga } from 'redux-form-saga'
 
 // Import root app
 import App from 'containers/App';
@@ -55,7 +56,9 @@ openSansObserver.load().then(() => {
 const initialState = {};
 const store = configureStore(initialState, browserHistory);
 
-authSagas.map(store.runSaga)
+// register sagas
+const sagas = [].concat(authSagas, [formActionSaga])
+sagas.map(store.runSaga)
 
 // Sync history and store, as the react-router-redux reducer
 // is under the non-default key ("routing"), selectLocationState

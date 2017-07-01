@@ -1,15 +1,22 @@
 import React, { PropTypes } from 'react'
-import { reset } from 'redux-form'
+import { change, reset } from 'redux-form'
 import { reduxForm } from 'redux-form/immutable'
-import { Button } from 'react-bootstrap'
+import { Alert, Button } from 'react-bootstrap'
+import Icon from 'react-fontawesome'
 
 import LoadingIndicator from 'components/LoadingIndicator'
 import { TextFieldGroup, PasswordFieldGroup } from 'components/Form/Input'
+import { login } from './actions'
 
 const LoginForm = (props) => {
-  const { handleSubmit, pristine, submitting } = props
+  const { error, handleSubmit, pristine, submitting } = props
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(login)}>
+      { error &&
+        <Alert bsStyle="danger">
+          <Icon name="exclamation-triangle" /> <strong>{error}</strong>
+        </Alert>
+      }
       <TextFieldGroup name="username" />
       <PasswordFieldGroup name="password" />
       <Button type="submit" bsStyle="primary" disabled={pristine || submitting}>
@@ -20,13 +27,19 @@ const LoginForm = (props) => {
 }
 
 LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  pristine: PropTypes.bool.isRequired,
-  submitting: PropTypes.bool.isRequired,
+  error: PropTypes.string,
+  handleSubmit: PropTypes.func,
+  pristine: PropTypes.bool,
+  submitting: PropTypes.bool,
 }
 
 export default reduxForm({
   form: 'login',
-  onSubmitSuccess: (result, dispatch) => dispatch(reset('login')),
-  onSubmitFail: (errors, dispatch) => dispatch(reset('login')),
+  onSubmitSuccess: (result, dispatch) => {
+    dispatch(reset('login'))
+  },
+  onSubmitFail: (errors, dispatch) => {
+    dispatch(change('login', 'username', ''))
+    dispatch(change('login', 'password', ''))
+  },
 })(LoginForm)
