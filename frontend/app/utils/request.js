@@ -2,39 +2,6 @@ import 'whatwg-fetch';
 import * as Cookies from 'js-cookie'
 
 /**
- * Parses the JSON returned by a network request
- *
- * @param  {object} response A response from a network request
- *
- * @return {object}          The parsed JSON from the request
- */
-function parseJSON(response) {
-  // early return if no content
-  if (response.status === 204) {
-    return null
-  }
-
-  return response.json();
-}
-
-/**
- * Checks if a network request came back fine, and throws an error if not
- *
- * @param  {object} response   A response from a network request
- *
- * @return {object|undefined} Returns either the response, or throws an error
- */
-function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
-    return response;
-  }
-
-  const error = new Error(response.statusText);
-  error.response = response;
-  throw error;
-}
-
-/**
  * Requests a URL, returning a promise
  *
  * @param  {string} url       The URL we want to request
@@ -44,8 +11,7 @@ function checkStatus(response) {
  */
 export function request(url, options) {
   return fetch(url, options)
-    .then(checkStatus)
-    .then(parseJSON);
+    .then(_checkStatusAndParseJSON)
 }
 
 export function get(url, options = {}) {
@@ -99,3 +65,41 @@ export function authedPost(token, url, data = null, options = {}) {
 }
 
 export default request
+
+// private functions -----------------------------------------------------------
+
+function _checkStatusAndParseJSON(response) {
+  return new Promise((resolve, reject) => {
+    response.json()
+      // response with json body
+      .then((json) => {
+        if (_checkStatus(response)) {
+          // success response with json body
+          resolve(json)
+        } else {
+          // error response with json error message
+          reject(_responseError(response, json))
+        }
+      })
+      // response with no body (response.json() raises SyntaxError)
+      .catch(() => {
+        if (_checkStatus(response)) {
+          // success response with no body (most likely HTTP 204: No Content)
+          resolve(null)
+        } else {
+          // error response, create generic error message from HTTP status
+          reject(_responseError(response, { error: response.statusText }))
+        }
+      })
+  })
+}
+
+function _checkStatus(response) {
+  return response.status >= 200 && response.status < 300
+}
+
+function _responseError(response, json) {
+  const error = new Error(response.statusText)
+  error.response = json
+  return error
+}
