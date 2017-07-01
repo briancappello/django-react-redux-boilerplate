@@ -9,6 +9,8 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 
+import { Grid } from 'react-bootstrap'
+
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 import withProgressBar from 'components/ProgressBar';
@@ -24,7 +26,9 @@ export function App(props) {
         ]}
       />
       <Header />
-      {React.Children.toArray(props.children)}
+      <Grid>
+        {React.Children.toArray(props.children)}
+      </Grid>
       <Footer />
     </div>
   );
