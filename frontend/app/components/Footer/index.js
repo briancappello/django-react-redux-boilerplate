@@ -1,12 +1,23 @@
 import React from 'react';
+import { Grid, Row, Col } from 'react-bootstrap'
+
+import { COPYRIGHT } from 'config'
+
+import './footer.scss'
 
 function Footer() {
   return (
-    <div>
-      <section>
-        <p>&copy; Copyright Brian Cappello {new Date().getFullYear()}</p>
-      </section>
-    </div>
+    <footer>
+      <Grid>
+        <Row>
+          <Col xs={12}>
+            <p className="center-text">
+              &copy; {COPYRIGHT} {new Date().getFullYear()}
+            </p>
+          </Col>
+        </Row>
+      </Grid>
+    </footer>
   );
 }
 
