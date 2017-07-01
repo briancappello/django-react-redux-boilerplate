@@ -1,10 +1,9 @@
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux'
+import { connect } from 'utils'
 import { Link } from 'react-router'
 import { createStructuredSelector } from 'reselect'
 import { selectToken } from 'containers/Auth/selectors'
 import { logout } from 'containers/Auth/actions'
-import { preventDefault } from 'utils'
 import { BRAND } from 'config'
 
 import { Navbar, Nav, NavItem } from 'react-bootstrap'
@@ -17,6 +16,17 @@ export class Header extends React.Component {
     token: PropTypes.string,
     onLogout: PropTypes.func.isRequired,
   }
+
+  static mapStateToProps = createStructuredSelector({
+    token: selectToken(),
+  })
+
+  static mapDispatchToProps = (dispatch) => ({
+    onLogout: (e) => {
+      e.preventDefault()
+      dispatch(logout())
+    },
+  })
 
   render() {
     const { token } = this.props
@@ -51,22 +61,5 @@ export class Header extends React.Component {
   }
 }
 
-const mapStateToProps = createStructuredSelector({
-  token: selectToken(),
-})
-
-function mapDispatchToProps(dispatch) {
-  return {
-    onLogout: (e) => {
-      preventDefault(e)
-      dispatch(logout())
-    },
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-  null,
-  { pure: false } // necessary for navbar isActive class to update correctly
-)(Header)
+// { pure: false } is necessary for navbar isActive class to update correctly
+export default connect(Header, null, { pure: false })

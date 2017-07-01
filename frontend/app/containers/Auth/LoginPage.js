@@ -3,7 +3,7 @@
  */
 import React, { PropTypes } from 'react';
 import Helmet from 'react-helmet';
-import { connect } from 'react-redux';
+import { connect } from 'utils'
 
 import { Row, Col } from 'react-bootstrap'
 
@@ -15,6 +15,10 @@ class LoginPage extends React.Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
   }
+
+  static mapDispatchToProps = (dispatch) => ({
+    onSubmit: ({ username, password }) => dispatch(login(username, password)),
+  })
 
   render() {
     return (
@@ -29,8 +33,4 @@ class LoginPage extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  onSubmit: ({ username, password }) => dispatch(login(username, password)),
-})
-
-export default connect(() => ({}), mapDispatchToProps)(LoginPage)
+export default connect(LoginPage)

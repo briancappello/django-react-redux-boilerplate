@@ -5,7 +5,7 @@
  */
 
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
+import { connect } from 'utils'
 {{#if wantHeaders}}
 import Helmet from 'react-helmet';
 {{/if}}
@@ -15,6 +15,21 @@ import makeSelect{{properCase name}} from './selectors';
 {{/if}}
 
 export class {{ properCase name }} extends React.{{{ component }}} {
+
+  static propTypes = {
+    dispatch: PropTypes.func.isRequired,
+  }
+
+  {{#if wantActionsAndReducer}}
+  static mapStateToProps = createStructuredSelector({
+    {{name}}: makeSelect{{properCase name}}(),
+  })
+  {{/if}}
+
+  static mapDispatchToProps = (dispatch) => ({
+    dispatch,
+  })
+
   render() {
     return (
       <div>
@@ -31,24 +46,4 @@ export class {{ properCase name }} extends React.{{{ component }}} {
   }
 }
 
-{{ properCase name }}.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-};
-
-{{#if wantActionsAndReducer}}
-const mapStateToProps = createStructuredSelector({
-  {{name}}: makeSelect{{properCase name}}(),
-});
-{{/if}}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
-}
-
-{{#if wantActionsAndReducer}}
-export default connect(mapStateToProps, mapDispatchToProps)({{ properCase name }});
-{{else}}
-export default connect(null, mapDispatchToProps)({{ properCase name }});
-{{/if}}
+export default connect({{ properCase name }})
