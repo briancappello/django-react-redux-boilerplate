@@ -17,7 +17,9 @@ class LoginView(APIView):
 
         user = authenticate(request, username=username, password=password)
         if not user:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response({
+                'error': 'Incorrect username or password',
+            }, status=status.HTTP_401_UNAUTHORIZED)
 
         token = AuthToken.objects.create(user)
         UserSerializer = knox_settings.USER_SERIALIZER

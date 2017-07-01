@@ -4,7 +4,7 @@ import { SERVER_URL } from 'config'
 import { post, authedPost } from 'utils/request'
 import { LOGIN, LOGOUT } from './constants'
 import { loginSuccess, loginError, logoutSuccess, logoutError } from './actions'
-import { selectForm, selectToken } from './selectors'
+import { selectToken } from './selectors'
 
 function _persistUserToken(user, token) {
   localStorage.setItem('user', JSON.stringify(user))
@@ -16,17 +16,17 @@ function _removeUserToken() {
   localStorage.removeItem('token')
 }
 
-export function* login() {
+export function* login({ username, password }) {
   const loginUrl = `${SERVER_URL}/api/auth/login/`
-  const formData = yield select(selectForm())
 
   try {
-    const { user, token } = yield call(post, loginUrl, formData)
+    const { user, token } = yield call(post, loginUrl, { username, password })
     _persistUserToken(user, token)
     yield put(loginSuccess(user, token))
   } catch (error) {
     _removeUserToken()
-    yield put(loginError(error))
+    const { response } = error
+    yield put(loginError(response.error))
   }
 }
 
@@ -39,7 +39,8 @@ export function* logout() {
     _removeUserToken()
     yield put(logoutSuccess())
   } catch (error) {
-    yield put(logoutError(error))
+    const { response } = error
+    yield put(logoutError(response.error))
   }
 }
 
