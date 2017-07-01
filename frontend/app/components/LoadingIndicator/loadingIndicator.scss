@@ -1,20 +1,17 @@
 @keyframes circleFadeDelay {
-  0%,
-  39%,
-  100% {
-    opacity: 0;
-  }
-
-  40% {
-    opacity: 1;
-  }
+  0%, 39%, 100% { opacity: 0; }
+  40% { opacity: 1; }
 }
 
 .spinner-loading-indicator {
-  margin: 2em auto;
-  width: 40px;
-  height: 40px;
+  margin: 2px;
+  display: inline-block;
+  min-width: 14px;
+  min-height: 14px;
+  max-width: 40px;
+  max-height: 40px;
   position: relative;
+  vertical-align: middle;
 
   .spinner-circle {
     width: 100%;
@@ -29,7 +26,6 @@
       margin: 0 auto;
       width: 15%;
       height: 15%;
-      background-color: #999;
       border-radius: 100%;
       animation: circleFadeDelay 1.2s infinite ease-in-out both;
     }
@@ -78,5 +74,13 @@
       transform: rotate(330deg);
       &:before { animation-delay: -0.1s; }
     }
+  }
+
+  // spinner colors
+  &.white .spinner-circle:before {
+    background-color: #fff;
+  }
+  &.black .spinner-circle:before {
+    background-color: #000;
   }
 }
