@@ -8,6 +8,7 @@ module.exports = require('./webpack.base.babel')({
   // In production, we skip all hot-reloading stuff
   entry: [
     'sanitize.css/sanitize.css',
+    'bootstrap-loader',
     path.join(process.cwd(), 'frontend/app/app.js'),
   ],
 

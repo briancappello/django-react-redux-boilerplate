@@ -31,6 +31,7 @@ module.exports = require('./webpack.base.babel')({
     'eventsource-polyfill', // Necessary for hot reloading with IE
     'webpack-hot-middleware/client?reload=true',
     'sanitize.css/sanitize.css',
+    'bootstrap-loader',
     path.join(process.cwd(), 'frontend/app/app.js'), // Start with js/app.js
   ],
 
