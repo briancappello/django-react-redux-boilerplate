@@ -9,6 +9,7 @@ import { BRAND } from 'config'
 
 import { Navbar, Nav, NavItem } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
+import Icon from 'react-fontawesome'
 
 export class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -23,21 +24,24 @@ export class Header extends React.Component { // eslint-disable-line react/prefe
       <Navbar collapseOnSelect>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to="/">{BRAND}</Link>
+            <Link to="/">
+              <Icon name="home" /> {BRAND}
+            </Link>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav pullRight>
             <LinkContainer to="/features">
-              <NavItem>Features</NavItem>
+              <NavItem>
+            <Icon name="fighter-jet" /> Features</NavItem>
             </LinkContainer>
             { token
               ? <LinkContainer to="/logout" onClick={this.props.onLogout}>
-                  <NavItem>Logout</NavItem>
+                  <NavItem><Icon name="sign-out" /> Logout</NavItem>
                 </LinkContainer>
               : <LinkContainer to="/login">
-                  <NavItem>Login</NavItem>
+                  <NavItem><Icon name="sign-in" /> Login</NavItem>
                 </LinkContainer>
             }
           </Nav>

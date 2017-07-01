@@ -10,7 +10,8 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { preventDefault } from 'utils'
 import LoadingComponent from 'components/LoadingIndicator'
-import { Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
+import { Row, Col, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap'
+import Icon from 'react-fontawesome'
 
 import { changeUsername, changePassword, login } from './actions'
 import { selectLoading, selectError, selectForm } from './selectors';
@@ -61,7 +62,9 @@ export class LoginPage extends React.Component { // eslint-disable-line react/pr
                              onChange={this.props.onPasswordChange}
                 />
               </FormGroup>
-              <button type="submit" className="btn btn-primary">Submit</button>
+              <Button type="submit" bsStyle="primary">
+                <Icon name="sign-in" /> Submit
+              </Button>
             </form>
           }
         </Col>
