@@ -5,6 +5,10 @@ import { createStructuredSelector } from 'reselect'
 import { selectToken } from 'containers/Auth/selectors'
 import { logout } from 'containers/Auth/actions'
 import { preventDefault } from 'utils'
+import { BRAND } from 'config'
+
+import { Navbar, Nav, NavItem } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap'
 
 export class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -16,14 +20,29 @@ export class Header extends React.Component { // eslint-disable-line react/prefe
   render() {
     const { token } = this.props
     return (
-      <div>
-        <Link to="/">Home</Link>
-        <Link to="/features">Features</Link>
-        { token
-          ? <Link href="/logout" onClick={this.props.onLogout}>Logout</Link>
-          : <Link to="/login">Login</Link>
-        }
-      </div>
+      <Navbar collapseOnSelect>
+        <Navbar.Header>
+          <Navbar.Brand>
+            <Link to="/">{BRAND}</Link>
+          </Navbar.Brand>
+          <Navbar.Toggle />
+        </Navbar.Header>
+        <Navbar.Collapse>
+          <Nav pullRight>
+            <LinkContainer to="/features">
+              <NavItem>Features</NavItem>
+            </LinkContainer>
+            { token
+              ? <LinkContainer to="/logout" onClick={this.props.onLogout}>
+                  <NavItem>Logout</NavItem>
+                </LinkContainer>
+              : <LinkContainer to="/login">
+                  <NavItem>Login</NavItem>
+                </LinkContainer>
+            }
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     );
   }
 }
@@ -41,4 +60,9 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  null,
+  { pure: false } // necessary for navbar isActive class to update correctly
+)(Header)
