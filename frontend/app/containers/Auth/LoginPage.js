@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { preventDefault } from 'utils'
 import LoadingComponent from 'components/LoadingIndicator'
+import { Row, Col, FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
 
 import { changeUsername, changePassword, login } from './actions'
 import { selectLoading, selectError, selectForm } from './selectors';
@@ -32,37 +33,39 @@ export class LoginPage extends React.Component { // eslint-disable-line react/pr
     const { loading, error, form } = this.props
 
     return (
-      <div className="login-page">
+      <Row>
         <Helmet title="Login" />
-        <h1>Login</h1>
-        { loading ? <LoadingComponent /> :
-          <form onSubmit={this.props.onSubmit}>
-            {error
-              ? <div className="error">
-                  <p>{error}</p>
-                </div>
-              : ''
-            }
-            <div>
-              <label htmlFor="username">Username:</label>
-              <input id="username"
-                     type="text"
-                     value={form.username}
-                     onChange={this.props.onUsernameChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="password">Password:</label>
-              <input id="password"
-                     type="password"
-                     value={form.password}
-                     onChange={this.props.onPasswordChange}
-              />
-            </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
-          </form>
-        }
-      </div>
+        <Col xs={12} sm={6} smOffset={3} md={4} mdOffset={4}>
+          <h1>Login</h1>
+          { loading ? <LoadingComponent /> :
+            <form onSubmit={this.props.onSubmit}>
+              {error
+                ? <div className="error">
+                    <p>{error}</p>
+                  </div>
+                : ''
+              }
+              <FormGroup>
+                <ControlLabel htmlFor="username">Username:</ControlLabel>
+                <FormControl id="username"
+                             type="text"
+                             value={form.username}
+                             onChange={this.props.onUsernameChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel htmlFor="password">Password:</ControlLabel>
+                <FormControl id="password"
+                             type="password"
+                             value={form.password}
+                             onChange={this.props.onPasswordChange}
+                />
+              </FormGroup>
+              <button type="submit" className="btn btn-primary">Submit</button>
+            </form>
+          }
+        </Col>
+      </Row>
     );
   }
 }
