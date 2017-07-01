@@ -6,7 +6,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 
-export default class FeaturePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+export default class FeaturePage extends React.Component {
 
   // Since state and props are static,
   // there's no need to re-render this component

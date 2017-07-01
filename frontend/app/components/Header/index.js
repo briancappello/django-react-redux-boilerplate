@@ -11,7 +11,7 @@ import { Navbar, Nav, NavItem } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import Icon from 'react-fontawesome'
 
-export class Header extends React.Component { // eslint-disable-line react/prefer-stateless-function
+export class Header extends React.Component {
 
   static propTypes = {
     token: PropTypes.string,

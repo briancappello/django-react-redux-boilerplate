@@ -10,7 +10,7 @@ import { Row, Col } from 'react-bootstrap'
 import LoginForm from './LoginForm'
 import { login } from './actions'
 
-export class LoginPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class LoginPage extends React.Component {
 
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
