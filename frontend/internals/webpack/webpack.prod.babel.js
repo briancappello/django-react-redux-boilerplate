@@ -7,6 +7,7 @@ const OfflinePlugin = require('offline-plugin');
 module.exports = require('./webpack.base.babel')({
   // In production, we skip all hot-reloading stuff
   entry: [
+    'sanitize.css/sanitize.css',
     path.join(process.cwd(), 'frontend/app/app.js'),
   ],
 
