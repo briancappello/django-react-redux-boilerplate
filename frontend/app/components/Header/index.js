@@ -29,7 +29,7 @@ export class Header extends React.Component {
   })
 
   render() {
-    const { token } = this.props
+    const isAuthenticated = !!this.props.token
     return (
       <Navbar collapseOnSelect>
         <Navbar.Header>
@@ -43,10 +43,9 @@ export class Header extends React.Component {
         <Navbar.Collapse>
           <Nav pullRight>
             <LinkContainer to="/features">
-              <NavItem>
-            <Icon name="fighter-jet" /> Features</NavItem>
+              <NavItem><Icon name="fighter-jet" /> Features</NavItem>
             </LinkContainer>
-            { token
+            { isAuthenticated
               ? <LinkContainer to="/logout" onClick={this.props.onLogout}>
                   <NavItem><Icon name="sign-out" /> Logout</NavItem>
                 </LinkContainer>
