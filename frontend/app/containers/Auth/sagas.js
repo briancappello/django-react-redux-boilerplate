@@ -7,16 +7,6 @@ import { post, authedPost } from 'utils/request'
 import { login, logout } from './actions'
 import { selectToken } from './selectors'
 
-function _persistUserToken(user, token) {
-  localStorage.setItem('user', JSON.stringify(user))
-  localStorage.setItem('token', token)
-}
-
-function _removeUserToken() {
-  localStorage.removeItem('user')
-  localStorage.removeItem('token')
-}
-
 export function* handleLogin({ payload }) {
   const loginUrl = `${SERVER_URL}/api/auth/login/`
 
@@ -68,4 +58,16 @@ export function* logoutSaga() {
 export default [
   loginSaga,
   logoutSaga,
-];
+]
+
+// private functions -----------------------------------------------
+
+function _persistUserToken(user, token) {
+  localStorage.setItem('user', JSON.stringify(user))
+  localStorage.setItem('token', token)
+}
+
+function _removeUserToken() {
+  localStorage.removeItem('user')
+  localStorage.removeItem('token')
+}
