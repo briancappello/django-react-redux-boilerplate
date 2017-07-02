@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { change, reset } from 'redux-form'
+import { reset } from 'redux-form'
 import { reduxForm } from 'redux-form/immutable'
 import { Alert, Button } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
@@ -38,9 +38,5 @@ export default reduxForm({
   form: 'login',
   onSubmitSuccess: (result, dispatch) => {
     dispatch(reset('login'))
-  },
-  onSubmitFail: (errors, dispatch) => {
-    dispatch(change('login', 'username', ''))
-    dispatch(change('login', 'password', ''))
   },
 })(LoginForm)
