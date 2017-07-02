@@ -5,7 +5,8 @@ import { Alert, Button } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 
 import LoadingIndicator from 'components/LoadingIndicator'
-import { TextFieldGroup, PasswordFieldGroup } from 'components/Form/Input'
+import { TextField, PasswordField } from 'components/Form/Input'
+import { required } from 'components/Form/validators'
 import { login } from './actions'
 
 const LoginForm = (props) => {
@@ -17,8 +18,8 @@ const LoginForm = (props) => {
           <Icon name="exclamation-triangle" /> <strong>{error}</strong>
         </Alert>
       }
-      <TextFieldGroup name="username" />
-      <PasswordFieldGroup name="password" />
+      <TextField name="username" validate={[required]} />
+      <PasswordField name="password" validate={[required]} />
       <Button type="submit" bsStyle="primary" disabled={pristine || submitting}>
         {submitting ? <LoadingIndicator color="white" /> : ''} Submit
       </Button>

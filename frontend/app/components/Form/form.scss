@@ -1,0 +1,7 @@
+.control-label.required:after {
+  content: ' *';
+}
+
+.form-group.has-feedback .fa.form-control-feedback {
+  top: 33px;
+}
