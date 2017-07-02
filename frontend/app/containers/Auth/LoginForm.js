@@ -18,7 +18,7 @@ const LoginForm = (props) => {
           <Icon name="exclamation-triangle" /> <strong>{error}</strong>
         </Alert>
       }
-      <TextField name="username" validate={[required]} />
+      <TextField name="username" autoFocus validate={[required]} />
       <PasswordField name="password" validate={[required]} />
       <Button type="submit" bsStyle="primary" disabled={pristine || submitting}>
         {submitting ? <LoadingIndicator color="white" /> : ''} Submit
