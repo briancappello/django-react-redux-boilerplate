@@ -16,7 +16,7 @@ import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import FontFaceObserver from 'fontfaceobserver';
 import { useScroll } from 'react-router-scroll';
-import { formActionSaga } from 'redux-form-saga'
+import { routinesWatcherSaga } from 'redux-saga-routines'
 
 // Import root app
 import App from 'containers/App';
@@ -57,7 +57,7 @@ const initialState = {};
 const store = configureStore(initialState, browserHistory);
 
 // register sagas
-const sagas = [].concat(authSagas, [formActionSaga])
+const sagas = [].concat(authSagas, [routinesWatcherSaga])
 sagas.map(store.runSaga)
 
 // Sync history and store, as the react-router-redux reducer

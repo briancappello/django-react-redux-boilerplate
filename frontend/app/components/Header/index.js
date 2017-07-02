@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'utils'
 import { Link } from 'react-router'
+import { bindRoutineCreators } from 'redux-saga-routines'
 import { createStructuredSelector } from 'reselect'
 import { selectToken } from 'containers/Auth/selectors'
 import { logout } from 'containers/Auth/actions'
@@ -14,7 +15,7 @@ export class Header extends React.Component {
 
   static propTypes = {
     token: PropTypes.string,
-    onLogout: PropTypes.func.isRequired,
+    logout: PropTypes.func,
   }
 
   static mapStateToProps = createStructuredSelector({
@@ -22,11 +23,13 @@ export class Header extends React.Component {
   })
 
   static mapDispatchToProps = (dispatch) => ({
-    onLogout: (e) => {
-      e.preventDefault()
-      dispatch(logout())
-    },
+    ...bindRoutineCreators({ logout }, dispatch),
   })
+
+  onLogout = (e) => {
+    e.preventDefault()
+    this.props.logout.trigger()
+  }
 
   render() {
     const isAuthenticated = !!this.props.token
@@ -46,12 +49,17 @@ export class Header extends React.Component {
               <NavItem><Icon name="fighter-jet" /> Features</NavItem>
             </LinkContainer>
             { isAuthenticated
-              ? <LinkContainer to="/logout" onClick={this.props.onLogout}>
+              ? <LinkContainer to="/logout" onClick={this.onLogout}>
                   <NavItem><Icon name="sign-out" /> Logout</NavItem>
                 </LinkContainer>
               : <LinkContainer to="/login">
                   <NavItem><Icon name="sign-in" /> Login</NavItem>
                 </LinkContainer>
+            }
+            { isAuthenticated ||
+              <LinkContainer to="/sign-up">
+                <NavItem><Icon name="pencil-square-o" /> Sign Up</NavItem>
+              </LinkContainer>
             }
           </Nav>
         </Navbar.Collapse>

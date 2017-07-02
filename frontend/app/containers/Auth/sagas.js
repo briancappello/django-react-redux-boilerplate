@@ -4,8 +4,7 @@ import { SubmissionError } from 'redux-form/immutable';
 import { SERVER_URL } from 'config'
 import { post, authedPost } from 'utils/request'
 
-import { LOGOUT } from './constants'
-import { login, logoutSuccess, logoutError } from './actions'
+import { login, logout } from './actions'
 import { selectToken } from './selectors'
 
 function _persistUserToken(user, token) {
@@ -18,11 +17,15 @@ function _removeUserToken() {
   localStorage.removeItem('token')
 }
 
-export function* handleLogin({ payload: { username, password } }) {
+export function* handleLogin({ payload }) {
   const loginUrl = `${SERVER_URL}/api/auth/login/`
 
   try {
-    const { user, token } = yield call(post, loginUrl, { username, password })
+    yield put(login.request())
+    const { user, token } = yield call(post, loginUrl, {
+      username: payload.get('username'),
+      password: payload.get('password'),
+    })
     _persistUserToken(user, token)
     yield put(login.success({ user, token }))
   } catch (error) {
@@ -30,6 +33,8 @@ export function* handleLogin({ payload: { username, password } }) {
     const { response } = error
     const formError = new SubmissionError({ _error: response.error })
     yield put(login.failure(formError))
+  } finally {
+    yield put(login.fulfill())
   }
 }
 
@@ -37,22 +42,27 @@ export function* handleLogout() {
   const logoutUrl = `${SERVER_URL}/api/auth/logout/`
   const token = yield select(selectToken())
 
+  // logout client-side regardless of server success/failure
+  _removeUserToken()
+
   try {
+    yield put(logout.request())
     yield call(authedPost, token, logoutUrl)
-    _removeUserToken()
-    yield put(logoutSuccess())
+    yield put(logout.success())
   } catch (error) {
     const { response } = error
-    yield put(logoutError(response.error))
+    yield put(logout.failure(response.error))
+  } finally {
+    yield put(logout.fulfill())
   }
 }
 
 export function* loginSaga() {
-  yield takeLatest(login.REQUEST, handleLogin)
+  yield takeLatest(login.TRIGGER, handleLogin)
 }
 
 export function* logoutSaga() {
-  yield takeLatest(LOGOUT, handleLogout)
+  yield takeLatest(logout.TRIGGER, handleLogout)
 }
 
 export default [
