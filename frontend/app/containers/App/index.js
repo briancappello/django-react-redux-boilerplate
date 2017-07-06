@@ -14,13 +14,14 @@ import { Grid } from 'react-bootstrap'
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 import withProgressBar from 'components/ProgressBar';
+import { BRAND } from 'config'
 
 export function App(props) {
   return (
     <div>
       <Helmet
-        titleTemplate="%s - React.js Boilerplate"
-        defaultTitle="React.js Boilerplate"
+        titleTemplate={`%s - ${BRAND}`}
+        defaultTitle={BRAND}
         meta={[
           { name: 'description', content: 'A React.js Boilerplate application' },
         ]}
