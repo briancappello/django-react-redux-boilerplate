@@ -56,11 +56,6 @@ export class Header extends React.Component {
                   <NavItem><Icon name="sign-in" /> Login</NavItem>
                 </LinkContainer>
             }
-            { isAuthenticated ||
-              <LinkContainer to="/sign-up">
-                <NavItem><Icon name="pencil-square-o" /> Sign Up</NavItem>
-              </LinkContainer>
-            }
           </Nav>
         </Navbar.Collapse>
       </Navbar>
