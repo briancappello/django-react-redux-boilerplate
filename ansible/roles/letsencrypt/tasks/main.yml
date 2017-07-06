@@ -1,0 +1,96 @@
+---
+  - name: update apt cache
+    apt: update_cache=yes cache_valid_time=3600
+    when: ansible_pkg_mgr == "apt"
+
+  - include_vars: "{{ item }}"
+    with_first_found:
+      - "{{ ansible_distribution }}-{{ ansible_distribution_major_version | int }}.yml"
+      - "{{ ansible_distribution }}.yml"
+      - "{{ ansible_os_family }}.yml"
+      - "default.yml"
+    when: virtualenv_package_name is not defined
+
+  - name: Install letsencrypt dependencies
+    package: name={{ item }} state=present
+    with_items: "{{ letsencrypt_depends | default([]) }}"
+
+  - name: Install virtualenv
+    package: name={{ item }} state=present
+    with_items: "{{ virtualenv_package_name | default([]) }}"
+
+  - name: Update virtualenv six
+    pip:
+      virtualenv: "{{ letsencrypt_venv }}"
+      virtualenv_site_packages: no
+      name: six
+      state: latest
+      virtualenv_python: python2
+
+  - name: Update virtualenv setuptools
+    pip:
+      virtualenv: "{{ letsencrypt_venv }}"
+      virtualenv_site_packages: no
+      name: setuptools
+      state: latest
+      virtualenv_python: python2
+    ignore_errors: yes
+
+  - name: Update virtualenv pip
+    pip:
+      virtualenv: "{{ letsencrypt_venv }}"
+      virtualenv_site_packages: no
+      name: pip
+      state: latest
+      virtualenv_python: python2
+
+  - name: Install pycparser
+    when: ansible_os_family == "RedHat"
+    # https://community.letsencrypt.org/t/certbot-auto-fails-while-setting-up-virtual-environment-complains-about-package-hashes/20529/22
+    pip:
+      virtualenv: "{{ letsencrypt_venv }}"
+      virtualenv_site_packages: no
+      name: pycparser
+      version: 2.13
+      state: present
+      virtualenv_python: python2
+
+  - name: Install letsencrypt
+    pip:
+      virtualenv: "{{ letsencrypt_venv }}"
+      virtualenv_site_packages: no
+      name: letsencrypt
+      state: latest
+
+  - name: Ensure webroots exist
+    file:
+      path: "{{ item.webroot }}"
+      state: directory
+      follow: yes
+    with_items: '{{ letsencrypt_cert_domains }}'
+
+  - name: get certificates using the webroot authenticator
+    command: "{{ letsencrypt_venv }}/bin/letsencrypt -n --agree-tos  {% if letsencrypt_rsa_key_size is defined %}--rsa-key-size {{ letsencrypt_rsa_key_size }}{% endif %} --text {% for domain in item.domains %}-d {{ domain }} {% endfor %}--email {{ letsencrypt_email }} {% if letsencrypt_server is defined %}--server {{ letsencrypt_server }}{% endif %} --expand --webroot --webroot-path {{ item.webroot }} certonly"
+    args:
+      creates: '/etc/letsencrypt/live/{{ item.domains[0] }}'
+    when: letsencrypt_authenticator == "webroot"
+    with_items: '{{ letsencrypt_cert_domains }}'
+
+  - name: add nginx reverse proxy config
+    template:
+      src: uwsgi_django_https.nginx.jinja2
+      dest: '{{ nginx_sites_available_dir }}/uwsgi_django'
+    notify: restart nginx
+
+  - include: fix_renewal_file.yaml
+    with_items: '{{ letsencrypt_cert_domains }}'
+    loop_control:
+      loop_var: cert_domain
+
+  - name: Install renewal cron
+    cron:
+      name: "Let's Encrypt Renewal"
+      day: "{{ letsencrypt_renewal_frequency.day }}"
+      hour: "{{ letsencrypt_renewal_frequency.hour }}"
+      minute: "{{ letsencrypt_renewal_frequency.minute }}"
+      job: "{{ letsencrypt_venv }}/bin/letsencrypt renew --quiet {{ letsencrypt_renewal_command_args }} >> /var/log/letsencrypt/auto-renew.log 2>&1"

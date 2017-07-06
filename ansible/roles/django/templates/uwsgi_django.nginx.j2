@@ -6,11 +6,19 @@ upstream django {
 
 server {
   listen 80;
+  listen [::]:80;
   server_name {{ app_domain }};
   charset utf-8;
 
   access_log {{ nginx_access_log_file }};
   error_log {{ nginx_error_log_file }};
+
+  root {{ nginx_sites_dir }};
+
+  # allow letsencrypt challenges over http
+  location /.well-known/acme-challenge/ {
+    try_files $uri $uri/ =404;
+  }
 
   location /media/ {
     alias {{ django_media_root }}/;

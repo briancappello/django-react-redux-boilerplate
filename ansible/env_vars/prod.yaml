@@ -2,3 +2,5 @@
 # FIXME pull these values from ansible-vault
 #django_secret_key: FIXME-vault
 #django_database_password: FIXME-vault
+django_allowed_hosts: 'www.{{ app_domain }}'
+django_use_http_x_forwarded_proto: 'True'

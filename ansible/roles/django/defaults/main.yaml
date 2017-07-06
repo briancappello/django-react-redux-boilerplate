@@ -29,6 +29,7 @@ __all_the_env_vars__:
   DJANGO_STATIC_ROOT: '{{ django_static_root | default(omit) }}'
   DJANGO_MEDIA_ROOT: '{{ django_media_root | default(omit) }}'
   DJANGO_USE_X_FORWARDED_HOST: '{{ django_use_x_forwarded_host | default(omit) }}'
+  DJANGO_USE_HTTP_X_FORWARDED_PROTO: '{{ django_use_http_x_forwarded_proto | default(omit) }}'
   DJANGO_TIMEZONE: '{{ django_timezone | default(omit) }}'
   DJANGO_EMAIL_BACKEND: '{{ django_email_backend | default(omit) }}'
   DJANGO_EMAIL_HOST: '{{ django_email_host | default(omit) }}'

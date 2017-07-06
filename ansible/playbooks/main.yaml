@@ -78,6 +78,12 @@
         - '../env_vars/defaults.yaml'
         - '../env_vars/{{ app_env }}.yaml'
 
+    - when: app_env == 'prod'
+      set_fact:
+        le_fullchain_path: '/etc/letsencrypt/live/{{ app_domain }}/fullchain.pem'
+        le_privkey_path: '/etc/letsencrypt/live/{{ app_domain }}/privkey.pem'
+        le_chain_path: '/etc/letsencrypt/live/{{ app_domain }}/chain.pem'
+
 - name: provision server
   hosts: all
   user: deploy
@@ -112,3 +118,26 @@
     - when: app_env == 'dev' or app_env == 'staging'
       role: Oefenweb.mailhog
       tags: mailhog
+
+- name: letsencrypt
+  hosts: all
+  user: deploy
+  become: yes
+  roles:
+    - when: app_env == 'staging'
+      role: letsencrypt
+      vars:
+        letsencrypt_cert_domains:
+          - webroot: '{{ nginx_sites_dir }}'
+            domains: ['{{ app_domain }}']
+            letsencrypt_email: '{{ admin_email }}'
+      tags: letsencrypt
+
+    - when: app_env == 'prod'
+      role: letsencrypt
+      vars:
+        letsencrypt_cert_domains:
+          - webroot: '{{ nginx_sites_dir }}'
+            domains: ['{{ app_domain }}', 'www.{{ app_domain }}']
+            letsencrypt_email: '{{ admin_email }}'
+      tags: letsencrypt

@@ -38,6 +38,9 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS').split(',') \
 
 USE_X_FORWARDED_HOST = get_boolean_env('DJANGO_USE_X_FORWARDED_HOST', False)
 
+if get_boolean_env('DJANGO_USE_HTTP_X_FORWARDED_PROTO', False):
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Application definition
 
 INSTALLED_APPS = [

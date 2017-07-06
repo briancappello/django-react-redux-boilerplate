@@ -17,6 +17,8 @@ app_env: dev
 # app_domain: the domain to deploy to (set in the hosts_<env> inventory files)
 app_domain: example.com
 
+admin_email: 'webmaster@{{ app_domain }}'
+
 # the timezone to set the server to
 server_timezone: America/New_York
 
