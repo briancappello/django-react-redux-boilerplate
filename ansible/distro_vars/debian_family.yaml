@@ -6,3 +6,5 @@ debian_family_deps:
 # services: (systemd daemon names)
 cron_svc: cron
 ntp_svc: ntp
+
+nginx_sites_dir: /var/www/html

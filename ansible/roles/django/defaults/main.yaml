@@ -42,14 +42,6 @@ __all_the_env_vars__:
   DJANGO_EMAIL_SSL_CERTFILE: '{{ django_email_ssl_certfile | default(omit) }}'
 django_environment: '{{ __all_the_env_vars__ | filter_omitted }}'
 
-application_log_dir: '/var/log/{{ project_name }}'
-
-uwsgi_log_file: '{{ application_log_dir }}/uwsgi_supervisor.log'
-uwsgi_socket_path: '/var/run/uwsgi/{{ project_name }}.sock'
-
-nginx_access_log_file: '{{ application_log_dir }}/nginx_access.log'
-nginx_error_log_file: '{{ application_log_dir }}/nginx_error.log'
-
 run_django_syncdb: no
 run_django_db_migrations: yes
 run_django_fixtures: no
