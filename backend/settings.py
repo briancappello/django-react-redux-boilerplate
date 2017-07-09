@@ -168,13 +168,18 @@ MEDIA_ROOT = os.getenv('DJANGO_MEDIA_ROOT',
 # http://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'knox.auth.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ],
     'PAGE_SIZE': 10,
 }
+# disable the web browsable API in production
+if not DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = ('rest_framework.renderers.JSONRenderer',)
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = ('knox.auth.TokenAuthentication',)
 
 # Rest Knox
 # https://james1345.github.io/django-rest-knox/settings/
