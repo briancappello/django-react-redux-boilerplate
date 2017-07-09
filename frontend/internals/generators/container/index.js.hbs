@@ -1,17 +1,12 @@
-/*
- *
- * {{properCase name }}
- *
- */
-
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 import { connect } from 'utils'
 {{#if wantHeaders}}
-import Helmet from 'react-helmet';
+import Helmet from 'react-helmet'
 {{/if}}
 {{#if wantActionsAndReducer}}
-import { createStructuredSelector } from 'reselect';
-import makeSelect{{properCase name}} from './selectors';
+import { createStructuredSelector } from 'reselect'
+
+import makeSelect{{properCase name}} from './selectors'
 {{/if}}
 
 export class {{ properCase name }} extends React.{{{ component }}} {
@@ -22,7 +17,7 @@ export class {{ properCase name }} extends React.{{{ component }}} {
 
   {{#if wantActionsAndReducer}}
   static mapStateToProps = createStructuredSelector({
-    {{name}}: makeSelect{{properCase name}}(),
+    {{ camelCase name }}: makeSelect{{ properCase name }}(),
   })
   {{/if}}
 
@@ -37,12 +32,12 @@ export class {{ properCase name }} extends React.{{{ component }}} {
         <Helmet
           title="{{properCase name}}"
           meta={{curly true}}[
-            {{curly true}} name: 'description', content: 'Description of {{properCase name}}' {{curly}},
+            {{curly true}} name: 'description', content: 'Description of {{ properCase name }}' {{curly}},
           ]{{curly}}
         />
       {{/if}}
       </div>
-    );
+    )
   }
 }
 

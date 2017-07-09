@@ -1,15 +1,14 @@
-/*
- *
- * {{ properCase name }} actions
- *
- */
+import { createRoutine } from 'redux-saga-routines'
 
 import {
   DEFAULT_ACTION,
-} from './constants';
+  DEFAULT_ROUTINE,
+} from './constants'
 
 export function defaultAction() {
   return {
     type: DEFAULT_ACTION,
-  };
+  }
 }
+
+export const defaultRoutine = createRoutine(DEFAULT_ROUTINE)
