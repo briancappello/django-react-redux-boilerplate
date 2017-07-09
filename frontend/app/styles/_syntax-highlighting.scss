@@ -1,0 +1,14 @@
+/* bootstrap / highlight.js overrides */
+pre {
+  padding: 0;
+  margin: 0 0 1rem;
+
+  code {
+    border-radius: 4px;
+
+    &.hljs {
+      padding: 10px 13px;
+      color: #e7e7e7;
+    }
+  }
+}

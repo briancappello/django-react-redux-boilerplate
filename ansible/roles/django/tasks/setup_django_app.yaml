@@ -12,6 +12,7 @@
       - "--exclude=ansible"
       - "--exclude=docker"
       - "--exclude=media"
+      - "--exclude=posts/.import-metadata.json"
   tags: django
 
 - name: clear .pyc files
@@ -93,6 +94,15 @@
   environment: '{{ django_environment }}'
   when: run_django_collectstatic is defined and run_django_collectstatic
   tags: django.collectstatic
+
+- name: import new posts
+  django_manage:
+    command: loadposts
+    app_path: '{{ project_dir }}'
+    virtualenv: '{{ virtualenv_dir }}'
+    settings: '{{ django_settings_module }}'
+  environment: '{{ django_environment }}'
+  tags: django.loadposts
 
 - name: set collected static files owned by {{ nginx_user }}
   file:

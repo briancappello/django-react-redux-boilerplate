@@ -6,6 +6,8 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const AppConfig = require(path.resolve(process.cwd(), 'frontend', 'app', 'config'))
+
 process.traceDeprecation = true;
 
 module.exports = (options) => ({
@@ -86,6 +88,11 @@ module.exports = (options) => ({
       filename: '[name].[contenthash].css',
       disable: process.env.NODE_ENV !== 'production',
     }),
+
+    new webpack.ContextReplacementPlugin(
+      /highlight\.js\/lib\/languages$/,
+      new RegExp(AppConfig.HIGHLIGHT_LANGUAGES.join('|'))
+    ),
 
     new webpack.ProvidePlugin({
       // make fetch available

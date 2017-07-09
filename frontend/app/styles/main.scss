@@ -1,7 +1,9 @@
 @import "~font-awesome/css/font-awesome.css";
 
+@import "syntax-highlighting";
 @import "utils";
 
 body {
   background-color: $background-color;
+  line-height: 1.5;
 }

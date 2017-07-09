@@ -11,6 +11,7 @@ stats.json
 
 # deployment
 .password
+posts/.import-metadata.json
 
 # cruft
 .idea

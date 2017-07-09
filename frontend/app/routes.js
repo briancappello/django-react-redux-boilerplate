@@ -22,16 +22,16 @@ export default function createRoutes(store) {
       name: 'home',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/HomePage/reducer'),
-          import('containers/HomePage/sagas'),
+          import('containers/Blog/reducer'),
+          import('containers/Blog/sagas'),
           import('containers/HomePage'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([reducer, sagas, component]) => {
-          injectReducer('home', reducer.default);
-          injectSagas(sagas.default);
+        importModules.then(([blogReducer, blogSagas, component]) => {
+          injectReducer('blog', blogReducer.default);
+          injectSagas(blogSagas.default);
 
           renderRoute(component);
         });
@@ -61,6 +61,27 @@ export default function createRoutes(store) {
         import('containers/FeaturePage')
           .then(loadModule(cb))
           .catch(errorLoading);
+      },
+    }, {
+      path: '/posts/:slug',
+      name: 'post-detail',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/Blog/reducer'),
+          import('containers/Blog/sagas'),
+          import('containers/Blog/PostPage'),
+        ])
+
+        const renderRoute = loadModule(cb)
+
+        importModules.then(([blogReducer, blogSagas, component]) => {
+          injectReducer('blog', blogReducer.default)
+          injectSagas(blogSagas.default)
+
+          renderRoute(component)
+        })
+
+        importModules.catch(errorLoading)
       },
     }, {
       path: '*',

@@ -1,4 +1,5 @@
 asn1crypto==0.22.0
+beautifulsoup4==4.6.0
 cffi==1.10.0
 cryptography==1.9
 Django==1.11.2
@@ -7,8 +8,13 @@ django-extensions==1.7.9
 django-rest-knox==3.0.0
 djangorestframework==3.6.3
 idna==2.5
+lxml==3.8.0
+Markdown==2.6.8
 psycopg2==2.7.1
 pycparser==2.17
 pyOpenSSL==17.0.0
+python-frontmatter==0.4.2
 pytz==2017.2
+PyYAML==3.12
 six==1.10.0
+tzlocal==1.4
