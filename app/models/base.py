@@ -34,7 +34,8 @@ class UserAuditMixin(models.Model):
                                     default=get_current_user)
 
     def save(self, **kwargs):
-        self.modified_by = get_current_user()
+        current_user = get_current_user()
+        self.modified_by = current_user or self.created_by
         super(UserAuditMixin, self).save(**kwargs)
 
     class Meta:
