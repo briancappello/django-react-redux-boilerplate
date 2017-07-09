@@ -1,22 +1,39 @@
 # {{ ansible_managed }}
-# {{ ansible_managed }}
+
+# Base Config Generator:
+# https://mozilla.github.io/server-side-tls/ssl-config-generator/
 
 upstream django {
   server unix:{{ uwsgi_socket_path }};
 }
 
 server {
-  listen 443 ssl;
-  listen [::]:443 ssl;
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
   server_name www.{{ app_domain }};
   charset utf-8;
 
   ssl_certificate {{ le_fullchain_path }};
   ssl_certificate_key {{ le_privkey_path }};
-  ssl_trusted_certificate {{ le_chain_path }};
 
+  ssl_session_timeout 1d;
+  ssl_session_cache shared:SSL:50m;
+  ssl_session_tickets off;
+
+  # OCSP Stapling
   ssl_stapling on;
   ssl_stapling_verify on;
+  ssl_trusted_certificate {{ le_chain_path }};
+
+  # Only use TLS v1.2 as Transport Security Protocol
+  ssl_protocols TLSv1.2;
+
+  # Only use ciphersuites that are considered modern and secure by Mozilla
+  ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
+
+  # Do not let attackers downgrade the ciphersuites in Client Hello
+  # Always use server-side offered ciphersuites
+  ssl_prefer_server_ciphers on;
 
   # FIXME-dns resolver should be running on localhost
   resolver 208.67.222.222 208.67.220.220;  # OpenDNS servers
@@ -81,22 +98,39 @@ server {
 {% if app_env == 'prod' %}
 # redirect non-www to www
 server {
-    listen 443 ssl;
-    listen [::]:443 ssl;
-    server_name {{ app_domain }};
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name {{ app_domain }};
 
-    ssl_certificate {{ le_fullchain_path }};
-    ssl_certificate_key {{ le_privkey_path }};
-    ssl_trusted_certificate {{ le_chain_path }};
+  ssl_certificate {{ le_fullchain_path }};
+  ssl_certificate_key {{ le_privkey_path }};
 
-    ssl_stapling on;
-    ssl_stapling_verify on;
-    resolver 208.67.222.222 208.67.220.220;  # OpenDNS servers
-    # resolver 8.8.8.8 8.8.4.4;  # Google DNS servers
+  ssl_session_timeout 1d;
+  ssl_session_cache shared:SSL:50m;
+  ssl_session_tickets off;
 
-    location / {
-        return 302 https://www.{{ app_domain }}$request_uri;
-    }
+  # OCSP Stapling
+  ssl_stapling on;
+  ssl_stapling_verify on;
+  ssl_trusted_certificate {{ le_chain_path }};
+
+  # Only use TLS v1.2 as Transport Security Protocol
+  ssl_protocols TLSv1.2;
+
+  # Only use ciphersuites that are considered modern and secure by Mozilla
+  ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
+
+  # Do not let attackers downgrade the ciphersuites in Client Hello
+  # Always use server-side offered ciphersuites
+  ssl_prefer_server_ciphers on;
+
+  # FIXME-dns resolver should be running on localhost
+  resolver 208.67.222.222 208.67.220.220;  # OpenDNS servers
+  # resolver 8.8.8.8 8.8.4.4;  # Google DNS servers
+
+  location / {
+    return 301 https://www.{{ app_domain }}$request_uri;
+  }
 }
 {% endif %}
 
