@@ -22,7 +22,7 @@ module.exports = (options) => ({
       query: options.babelQuery,
     }, {
       test: /\.css$/,
-      include: /node_modules/,
+      include: [/app/, /node_modules/],
       use: ExtractTextPlugin.extract({
         use: [
           { loader: 'css-loader' },
