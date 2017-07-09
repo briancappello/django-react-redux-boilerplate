@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 import './loadingIndicator.scss'
 
-const LoadingIndicator = (props) => {
+export const LoadingIndicator = (props) => {
   const { color } = props
   return (
     <div className={`spinner-loading-indicator ${color}`}>
