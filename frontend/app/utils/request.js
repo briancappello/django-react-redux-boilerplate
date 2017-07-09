@@ -37,7 +37,11 @@ export function post(url, data, options = {}) {
   return request(url, _options)
 }
 
-export function authedGet(token, url, options = {}) {
+export function authedGet(url, token, options = {}) {
+  if (!token) {
+    return get(url, options)
+  }
+
   const _options = Object.assign({}, {
     credentials: 'include',
     headers: {
@@ -49,7 +53,11 @@ export function authedGet(token, url, options = {}) {
   return request(url, _options)
 }
 
-export function authedPost(token, url, data = null, options = {}) {
+export function authedPost(url, token, data = null, options = {}) {
+  if (!token) {
+    return post(url, data, options)
+  }
+
   const _options = Object.assign({}, {
     credentials: 'include',
     headers: {

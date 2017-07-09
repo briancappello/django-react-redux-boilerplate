@@ -37,7 +37,7 @@ export function* handleLogout() {
 
   try {
     yield put(logout.request())
-    yield call(authedPost, token, logoutUrl)
+    yield call(authedPost, logoutUrl, token)
     yield put(logout.success())
   } catch (error) {
     const { response } = error
