@@ -14,5 +14,4 @@ urlpatterns = [
     url(r'api/posts/$', views.list_posts, name='list_posts'),
     url(r'api/posts/(?P<slug>[\w\d-]+)/$', views.view_post, name='view_post'),
     url(r'api/', include(router.urls)),
-    url(r'', views.IndexView.as_view())
 ]

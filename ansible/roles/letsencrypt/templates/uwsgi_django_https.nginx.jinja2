@@ -33,7 +33,19 @@ server {
     alias {{ django_static_root }}/;
   }
 
-  location / {
+  # Do not cache sw.js, required for offline-first updates.
+  location /sw.js {
+    add_header Cache-Control "no-cache";
+    proxy_cache_bypass $http_pragma;
+    proxy_cache_revalidate on;
+    expires off;
+    access_log off;
+
+    root {{ django_static_root }};
+    try_files $uri /sw.js;
+  }
+
+  location /api/ {
     uwsgi_pass django;
 
     proxy_set_header X-Forwarded-Host $host;
@@ -57,6 +69,12 @@ server {
     uwsgi_param  REMOTE_PORT        $remote_port;
     uwsgi_param  SERVER_PORT        $server_port;
     uwsgi_param  SERVER_NAME        $server_name;
+  }
+
+  # always serve index.html for any other request
+  location / {
+    root {{ django_static_root }};
+    try_files $uri /index.html;
   }
 }
 
@@ -84,23 +102,23 @@ server {
 
 # redirect http to https
 server {
-    listen 80;
-    listen [::]:80;
+  listen 80;
+  listen [::]:80;
 {% if app_env == 'prod' %}
-    server_name {{ app_domain }} www.{{ app_domain }};
+  server_name {{ app_domain }} www.{{ app_domain }};
 {% else %}
-    server_name {{ app_domain }};
+  server_name {{ app_domain }};
 {% endif %}
 
-    root {{ nginx_sites_dir }};
+  root {{ nginx_sites_dir }};
 
-    # allow letsencrypt challenges over http
-    location /.well-known/acme-challenge/ {
-        try_files $uri $uri/ =404;
-    }
+  # allow letsencrypt challenges over http
+  location /.well-known/acme-challenge/ {
+    try_files $uri $uri/ =404;
+  }
 
-    # redirect everything else to https
-    location / {
-        return 302 https://$server_name$request_uri;
-    }
+  # redirect everything else to https
+  location / {
+    return 301 https://$server_name$request_uri;
+  }
 }
