@@ -1,3 +1,6 @@
+from bs4 import BeautifulSoup
+import functools
+
 from django.db import connection, models
 from django.db.models import Q
 from django.utils import timezone
@@ -8,6 +11,8 @@ from .. import app_settings
 from .base import TimeStampMixin, UserAuditMixin
 from .category import Category
 from .tag import Tag
+
+POST_PREVIEW_LENGTH = app_settings['POST_PREVIEW_LENGTH']
 
 
 class PostManager(models.Manager):
@@ -83,7 +88,6 @@ class Post(TimeStampMixin, UserAuditMixin, models.Model):
     file_path = models.FilePathField(_('File Path'), path=app_settings['POSTS_DIR'])
     is_public = models.BooleanField(default=True)
     html = models.TextField(_('HTML'))
-    preview = models.TextField(_('Preview'), null=True)
 
     categories = models.ManyToManyField(Category, related_name='posts')
     tags = models.ManyToManyField(Tag, related_name='posts')
@@ -95,3 +99,14 @@ class Post(TimeStampMixin, UserAuditMixin, models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    @functools.lru_cache()
+    def preview(self):
+        soup = BeautifulSoup(self.html, 'lxml')
+        p = soup.find('p')
+        if not p:
+            return None
+        elif len(p.text) <= POST_PREVIEW_LENGTH:
+            return p.text
+        return p.text[:p.text.rfind(' ', 0, POST_PREVIEW_LENGTH)] + '...'

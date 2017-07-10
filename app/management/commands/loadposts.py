@@ -18,7 +18,6 @@ POSTS_DIR = app_settings['POSTS_DIR']
 CMD_METADATA = os.path.join(POSTS_DIR, '.import-metadata.json')
 POST_CREATED_BY_USERNAME = app_settings['POST_CREATED_BY_USERNAME']
 POST_FRONTMATTER_LIST_DELIMITER = app_settings['POST_FRONTMATTER_LIST_DELIMITER']
-POST_PREVIEW_LENGTH = app_settings['POST_PREVIEW_LENGTH']
 
 
 class Command(BaseCommand):
@@ -94,7 +93,6 @@ class Command(BaseCommand):
         post.created_by = self.admin_user
         post.is_public = self._get_is_public(post_data)
         post.html = self._get_html(post_data)
-        post.preview = self._get_preview(post.html)
         post.save()
 
         return post, is_create
@@ -159,15 +157,6 @@ class Command(BaseCommand):
             markdown_extensions,
             output_format='html5'
         )
-
-    def _get_preview(self, html):
-        soup = BeautifulSoup(html, 'lxml')
-        p = soup.find('p')
-        if not p:
-            return None
-        elif len(p.text) <= POST_PREVIEW_LENGTH:
-            return p.text
-        return p.text[:p.text.rfind(' ', 0, POST_PREVIEW_LENGTH)] + '...'
 
     def _seconds_to_datetime(self, seconds, tz=None):
         dt = datetime.datetime.fromtimestamp(seconds)
