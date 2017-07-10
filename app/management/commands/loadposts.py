@@ -16,7 +16,7 @@ from ...models import Category, Post, Tag, User
 
 POSTS_DIR = app_settings['POSTS_DIR']
 CMD_METADATA = os.path.join(POSTS_DIR, '.import-metadata.json')
-FRONTMATTER_LIST_DELIMITER = app_settings['FRONTMATTER_LIST_DELIMITER']
+POST_FRONTMATTER_LIST_DELIMITER = app_settings['POST_FRONTMATTER_LIST_DELIMITER']
 POST_PREVIEW_LENGTH = app_settings['POST_PREVIEW_LENGTH']
 
 
@@ -183,4 +183,4 @@ class Command(BaseCommand):
     def _frontmatter_to_list(self, string):
         if isinstance(string, (list, tuple)):
             return (name.strip() for name in string)
-        return (name.strip() for name in string.split(FRONTMATTER_LIST_DELIMITER))
+        return (name.strip() for name in string.split(POST_FRONTMATTER_LIST_DELIMITER))
