@@ -5,6 +5,7 @@ import markdown
 import os
 import pytz
 import re
+import sys
 import tzlocal
 
 from bs4 import BeautifulSoup
@@ -22,10 +23,20 @@ POST_PREVIEW_LENGTH = app_settings['POST_PREVIEW_LENGTH']
 class Command(BaseCommand):
     def __init__(self, stdout=None, stderr=None, no_color=False):
         super(Command, self).__init__(stdout, stderr, no_color)
-        self.admin_user = User.objects.get(username__iexact='admin')
+        try:
+            self.admin_user = User.objects.get(username__iexact='admin')
+        except User.DoesNotExist:
+            self.admin_user = None
         self.metadata = self._load_metadata()
 
     def handle(self, *args, **options):
+        if not self.admin_user:
+            self.stderr.write('No admin user found! Exiting')
+            sys.exit(1)
+        elif not os.path.exists(POSTS_DIR):
+            self.stderr.write('POSTS_DIR {} does not exist! Exiting'.format(POSTS_DIR))
+            sys.exit(1)
+
         last_updated = self.metadata['last_updated']
         new_posts = [f for f in os.scandir(POSTS_DIR)
                      if f.name.endswith('.md')
