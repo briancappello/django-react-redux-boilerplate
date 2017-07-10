@@ -2,6 +2,10 @@ from rest_framework import serializers
 
 from ..models import Category, Post, Tag
 
+POST_LIST_FIELDS = ('id', 'slug', 'title', 'preview',
+                    'publishDate', 'lastUpdated',
+                    'categories', 'tags')
+
 
 class PostSerializer(serializers.ModelSerializer):
     publishDate = serializers.DateField(source='publish_date')
@@ -11,14 +15,10 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('slug', 'title', 'preview',
-                  'publishDate', 'lastUpdated',
-                  'categories', 'tags')
+        fields = POST_LIST_FIELDS
 
 
 class PostDetailSerializer(PostSerializer):
     class Meta:
         model = Post
-        fields = ('slug', 'title', 'preview', 'html',
-                  'publishDate', 'lastUpdated',
-                  'categories', 'tags')
+        fields = POST_LIST_FIELDS + ('html',)
