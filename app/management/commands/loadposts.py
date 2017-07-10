@@ -16,6 +16,7 @@ from ...models import Category, Post, Tag, User
 
 POSTS_DIR = app_settings['POSTS_DIR']
 CMD_METADATA = os.path.join(POSTS_DIR, '.import-metadata.json')
+POST_CREATED_BY_USERNAME = app_settings['POST_CREATED_BY_USERNAME']
 POST_FRONTMATTER_LIST_DELIMITER = app_settings['POST_FRONTMATTER_LIST_DELIMITER']
 POST_PREVIEW_LENGTH = app_settings['POST_PREVIEW_LENGTH']
 
@@ -24,14 +25,15 @@ class Command(BaseCommand):
     def __init__(self, stdout=None, stderr=None, no_color=False):
         super(Command, self).__init__(stdout, stderr, no_color)
         try:
-            self.admin_user = User.objects.get(username__iexact='admin')
+            self.admin_user = User.objects.get(username__iexact=POST_CREATED_BY_USERNAME)
         except User.DoesNotExist:
             self.admin_user = None
         self.metadata = self._load_metadata()
 
     def handle(self, *args, **options):
         if not self.admin_user:
-            self.stderr.write('No admin user found! Exiting')
+            self.stderr.write('No user with username {} found! Exiting'.format(
+                POST_CREATED_BY_USERNAME))
             sys.exit(1)
         elif not os.path.exists(POSTS_DIR):
             self.stderr.write('POSTS_DIR {} does not exist! Exiting'.format(POSTS_DIR))
