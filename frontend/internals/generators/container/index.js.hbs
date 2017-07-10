@@ -6,7 +6,7 @@ import Helmet from 'react-helmet'
 {{#if wantActionsAndReducer}}
 import { createStructuredSelector } from 'reselect'
 
-import makeSelect{{properCase name}} from './selectors'
+import { makeSelect{{properCase name}} } from './selectors'
 {{/if}}
 
 export class {{ properCase name }} extends React.{{{ component }}} {
