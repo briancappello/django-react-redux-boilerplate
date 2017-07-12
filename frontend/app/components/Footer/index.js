@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
 
 import { COPYRIGHT } from 'config'
@@ -18,7 +18,7 @@ function Footer() {
         </Row>
       </Grid>
     </footer>
-  );
+  )
 }
 
-export default Footer;
+export default Footer

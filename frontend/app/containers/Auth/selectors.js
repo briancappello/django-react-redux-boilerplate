@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from 'reselect'
 
 /**
  * Direct selector to the auth state domain
@@ -24,6 +24,6 @@ export const selectToken = () => createSelector(
 export const makeSelectAuth = () => createSelector(
   selectAuthDomain,
   (substate) => substate.toJS()
-);
+)
 
-export default makeSelectAuth;
+export default makeSelectAuth

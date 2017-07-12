@@ -4,13 +4,13 @@
  *
  */
 
-import { fromJS } from 'immutable';
+import { fromJS } from 'immutable'
 import { login, logout } from './actions'
 
 const initialState = fromJS({
   user: _loadSessionUser(),
   token: _loadSessionToken(),
-});
+})
 
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
@@ -27,7 +27,7 @@ export default function authReducer(state = initialState, action) {
         .set('token', null)
 
     default:
-      return state;
+      return state
   }
 }
 

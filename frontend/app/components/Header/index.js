@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from 'react'
 import { connect } from 'utils'
 import { Link } from 'react-router'
 import { bindRoutineCreators } from 'redux-saga-routines'
@@ -59,7 +59,7 @@ export class Header extends React.Component {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-    );
+    )
   }
 }
 

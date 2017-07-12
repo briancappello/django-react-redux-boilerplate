@@ -2,8 +2,8 @@
  * HomePage
  */
 
-import React, { PropTypes } from 'react';
-import Helmet from 'react-helmet';
+import React, { PropTypes } from 'react'
+import Helmet from 'react-helmet'
 import { createStructuredSelector } from 'reselect'
 import { bindActionCreators } from 'redux'
 import { connect } from 'utils'
@@ -55,7 +55,7 @@ export class HomePage extends React.Component {
           </Col>
         </Row>
       </article>
-    );
+    )
   }
 }
 

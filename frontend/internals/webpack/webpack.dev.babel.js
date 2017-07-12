@@ -2,15 +2,15 @@
  * DEVELOPMENT WEBPACK CONFIGURATION
  */
 
-const path = require('path');
-const fs = require('fs');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
-const logger = require('../../server/logger');
-const cheerio = require('cheerio');
-const pkg = require(path.resolve(process.cwd(), 'package.json'));
-const dllPlugin = pkg.dllPlugin;
+const path = require('path')
+const fs = require('fs')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CircularDependencyPlugin = require('circular-dependency-plugin')
+const logger = require('../../server/logger')
+const cheerio = require('cheerio')
+const pkg = require(path.resolve(process.cwd(), 'package.json'))
+const dllPlugin = pkg.dllPlugin
 
 const plugins = [
   new webpack.HotModuleReplacementPlugin(), // Tell webpack we want hot reloading
@@ -23,7 +23,7 @@ const plugins = [
     exclude: /a\.js|node_modules/, // exclude node_modules
     failOnError: false, // show a warning when there is a circular dependency
   }),
-];
+]
 
 module.exports = require('./webpack.base.babel')({
   // Add hot reloading in development
@@ -59,7 +59,7 @@ module.exports = require('./webpack.base.babel')({
   performance: {
     hints: false,
   },
-});
+})
 
 /**
  * Select which plugins to use to optimize the bundle's handling of
@@ -72,7 +72,7 @@ module.exports = require('./webpack.base.babel')({
  */
 function dependencyHandlers() {
   // Don't do anything during the DLL Build step
-  if (process.env.BUILDING_DLL) { return []; }
+  if (process.env.BUILDING_DLL) { return [] }
 
   // If the package.json does not have a dllPlugin property, use the CommonsChunkPlugin
   if (!dllPlugin) {
@@ -83,21 +83,21 @@ function dependencyHandlers() {
         minChunks: 2,
         async: true,
       }),
-    ];
+    ]
   }
 
-  const dllPath = path.resolve(process.cwd(), dllPlugin.path || 'node_modules/react-boilerplate-dlls');
+  const dllPath = path.resolve(process.cwd(), dllPlugin.path || 'node_modules/react-boilerplate-dlls')
 
   /**
    * If DLLs aren't explicitly defined, we assume all production dependencies listed in package.json
    * Reminder: You need to exclude any server side dependencies by listing them in dllConfig.exclude
    */
   if (!dllPlugin.dlls) {
-    const manifestPath = path.resolve(dllPath, 'reactBoilerplateDeps.json');
+    const manifestPath = path.resolve(dllPath, 'reactBoilerplateDeps.json')
 
     if (!fs.existsSync(manifestPath)) {
-      logger.error('The DLL manifest is missing. Please run `npm run build:dll`');
-      process.exit(0);
+      logger.error('The DLL manifest is missing. Please run `npm run build:dll`')
+      process.exit(0)
     }
 
     return [
@@ -105,28 +105,28 @@ function dependencyHandlers() {
         context: process.cwd(),
         manifest: require(manifestPath), // eslint-disable-line global-require
       }),
-    ];
+    ]
   }
 
   // If DLLs are explicitly defined, we automatically create a DLLReferencePlugin for each of them.
-  const dllManifests = Object.keys(dllPlugin.dlls).map((name) => path.join(dllPath, `/${name}.json`));
+  const dllManifests = Object.keys(dllPlugin.dlls).map((name) => path.join(dllPath, `/${name}.json`))
 
   return dllManifests.map((manifestPath) => {
     if (!fs.existsSync(path)) {
       if (!fs.existsSync(manifestPath)) {
-        logger.error(`The following Webpack DLL manifest is missing: ${path.basename(manifestPath)}`);
-        logger.error(`Expected to find it in ${dllPath}`);
-        logger.error('Please run: npm run build:dll');
+        logger.error(`The following Webpack DLL manifest is missing: ${path.basename(manifestPath)}`)
+        logger.error(`Expected to find it in ${dllPath}`)
+        logger.error('Please run: npm run build:dll')
 
-        process.exit(0);
+        process.exit(0)
       }
     }
 
     return new webpack.DllReferencePlugin({
       context: process.cwd(),
       manifest: require(manifestPath), // eslint-disable-line global-require
-    });
-  });
+    })
+  })
 }
 
 /**
@@ -136,15 +136,15 @@ function dependencyHandlers() {
 function templateContent() {
   const html = fs.readFileSync(
     path.resolve(process.cwd(), 'frontend/app/index.html')
-  ).toString();
+  ).toString()
 
-  if (!dllPlugin) { return html; }
+  if (!dllPlugin) { return html }
 
-  const doc = cheerio(html);
-  const body = doc.find('body');
-  const dllNames = !dllPlugin.dlls ? ['reactBoilerplateDeps'] : Object.keys(dllPlugin.dlls);
+  const doc = cheerio(html)
+  const body = doc.find('body')
+  const dllNames = !dllPlugin.dlls ? ['reactBoilerplateDeps'] : Object.keys(dllPlugin.dlls)
 
-  dllNames.forEach((dllName) => body.append(`<script data-dll='true' src='/${dllName}.dll.js'></script>`));
+  dllNames.forEach((dllName) => body.append(`<script data-dll='true' src='/${dllName}.dll.js'></script>`))
 
-  return doc.toString();
+  return doc.toString()
 }

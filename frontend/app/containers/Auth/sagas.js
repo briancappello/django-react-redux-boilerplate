@@ -1,5 +1,5 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
-import { SubmissionError } from 'redux-form/immutable';
+import { takeLatest, call, put, select } from 'redux-saga/effects'
+import { SubmissionError } from 'redux-form/immutable'
 
 import { SERVER_URL } from 'config'
 import { post, authedPost } from 'utils/request'

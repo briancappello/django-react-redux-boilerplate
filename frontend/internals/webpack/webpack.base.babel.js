@@ -2,13 +2,13 @@
  * COMMON WEBPACK CONFIGURATION
  */
 
-const path = require('path');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path')
+const webpack = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const AppConfig = require(path.resolve(process.cwd(), 'frontend', 'app', 'config'))
 
-process.traceDeprecation = true;
+process.traceDeprecation = true
 
 module.exports = (options) => ({
   entry: options.entry,
@@ -125,4 +125,4 @@ module.exports = (options) => ({
   devtool: options.devtool,
   target: 'web', // Make web variables accessible to webpack, e.g. window
   performance: options.performance || {},
-});
+})

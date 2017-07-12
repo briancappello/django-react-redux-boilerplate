@@ -25,7 +25,7 @@ export class NavLinkAndDropdown extends React.Component {
         pathname: PropTypes.string.isRequired,
       }).isRequired,
     }).isRequired,
-  };
+  }
 
   constructor(props) {
     super(props)

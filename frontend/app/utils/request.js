@@ -1,4 +1,4 @@
-import 'whatwg-fetch';
+import 'whatwg-fetch'
 import * as Cookies from 'js-cookie'
 
 /**
@@ -96,7 +96,11 @@ function _checkStatusAndParseJSON(response) {
           resolve(null)
         } else {
           // error response, create generic error message from HTTP status
-          reject(_responseError(response, { error: response.statusText }))
+          reject(_responseError(response, {
+            status: response.status,
+            statusText: response.statusText,
+            error: response.statusText,
+          }))
         }
       })
   })

@@ -2,27 +2,27 @@
  * The global state selectors
  */
 
-// import { createSelector } from 'reselect';
+// import { createSelector } from 'reselect'
 
-const selectGlobal = (state) => state.get('global');
+const selectGlobal = (state) => state.get('global')
 
 const makeSelectLocationState = () => {
-  let prevRoutingState;
-  let prevRoutingStateJS;
+  let prevRoutingState
+  let prevRoutingStateJS
 
   return (state) => {
-    const routingState = state.get('route'); // or state.route
+    const routingState = state.get('route') // or state.route
 
     if (!routingState.equals(prevRoutingState)) {
-      prevRoutingState = routingState;
-      prevRoutingStateJS = routingState.toJS();
+      prevRoutingState = routingState
+      prevRoutingStateJS = routingState.toJS()
     }
 
-    return prevRoutingStateJS;
-  };
-};
+    return prevRoutingStateJS
+  }
+}
 
 export {
   selectGlobal,
   makeSelectLocationState,
-};
+}

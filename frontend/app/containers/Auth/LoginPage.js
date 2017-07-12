@@ -1,8 +1,8 @@
 /*
  * LoginPage
  */
-import React, { PropTypes } from 'react';
-import Helmet from 'react-helmet';
+import React, { PropTypes } from 'react'
+import Helmet from 'react-helmet'
 import { connect } from 'utils'
 
 import { Row, Col } from 'react-bootstrap'

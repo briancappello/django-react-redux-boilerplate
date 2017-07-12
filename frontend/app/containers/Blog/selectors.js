@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from 'reselect'
 import { isTruthy } from 'utils/types'
 
 export const selectBlog = (state) => state.get('blog')

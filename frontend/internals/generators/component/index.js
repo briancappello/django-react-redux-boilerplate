@@ -4,9 +4,9 @@
 
 /* eslint strict: ["off"] */
 
-'use strict';
+'use strict'
 
-const componentExists = require('../utils/componentExists');
+const componentExists = require('../utils/componentExists')
 
 module.exports = {
   description: 'Add an unconnected component',
@@ -23,31 +23,31 @@ module.exports = {
     default: 'Button',
     validate: (value) => {
       if ((/.+/).test(value)) {
-        return componentExists(value) ? 'A component or container with this name already exists' : true;
+        return componentExists(value) ? 'A component or container with this name already exists' : true
       }
 
-      return 'The name is required';
+      return 'The name is required'
     },
   }],
   actions: (data) => {
     // Generate index.js and index.test.js
-    let componentTemplate;
+    let componentTemplate
 
     switch (data.type) {
       case 'ES6 Class': {
-        componentTemplate = './component/es6.js.hbs';
-        break;
+        componentTemplate = './component/es6.js.hbs'
+        break
       }
       case 'ES6 Class (Pure)': {
-        componentTemplate = './component/es6.pure.js.hbs';
-        break;
+        componentTemplate = './component/es6.pure.js.hbs'
+        break
       }
       case 'Stateless Function': {
-        componentTemplate = './component/stateless.js.hbs';
-        break;
+        componentTemplate = './component/stateless.js.hbs'
+        break
       }
       default: {
-        componentTemplate = './component/es6.js.hbs';
+        componentTemplate = './component/es6.js.hbs'
       }
     }
 
@@ -61,8 +61,8 @@ module.exports = {
       path: '../../app/components/{{properCase name}}/tests/index.test.js',
       templateFile: './component/test.js.hbs',
       abortOnFail: true,
-    }];
+    }]
 
-    return actions;
+    return actions
   },
-};
+}
