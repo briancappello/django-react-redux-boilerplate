@@ -3,19 +3,19 @@ import { createSelector } from 'reselect'
 /**
  * Direct selector to the auth state domain
  */
-const selectAuthDomain = (state) => state.get('auth')
+const selectAuthDomain = (state) => state.auth
 
 /**
  * Other specific selectors
  */
 export const selectUser = () => createSelector(
   selectAuthDomain,
-  (state) => state.get('user')
+  (state) => state.user
 )
 
 export const selectToken = () => createSelector(
   selectAuthDomain,
-  (substate) => substate.get('token')
+  (state) => state.token
 )
 
 /**
@@ -23,7 +23,7 @@ export const selectToken = () => createSelector(
  */
 export const makeSelectAuth = () => createSelector(
   selectAuthDomain,
-  (substate) => substate.toJS()
+  (state) => state
 )
 
 export default makeSelectAuth

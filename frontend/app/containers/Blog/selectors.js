@@ -1,37 +1,37 @@
 import { createSelector } from 'reselect'
 import { isTruthy } from 'utils/types'
 
-export const selectBlog = (state) => state.get('blog')
-export const selectCurrentPost = (state) => state.getIn(['blog', 'currentPost'])
-export const selectPosts = (state) => state.getIn(['blog', 'posts'])
-export const selectPostsByCategory = (state) => state.getIn(['blog', 'postsByCategory'])
+export const selectBlog = (state) => state.blog
+export const selectCurrentPost = (state) => state.blog.currentPost
+export const selectPosts = (state) => state.blog.posts
+export const selectPostsByCategory = (state) => state.blog.postsByCategory
 
 export const makeSelectPostsLastUpdated = () => createSelector(
   selectPosts,
-  (state) => state.get('lastUpdated')
+  (state) => state.lastUpdated
 )
 
 export const makeSelectPostsFetching = () => createSelector(
   selectPosts,
-  (state) => state.get('fetching')
+  (state) => state.fetching
 )
 
 export const makeSelectPosts = () => createSelector(
   selectPosts,
   (state) => {
-    const slugs = state.get('slugs')
+    const slugs = state.slugs
     if (!isTruthy(slugs)) {
       return []
     }
 
-    const bySlug = state.get('bySlug')
+    const bySlug = state.bySlug
     return slugs.map((slug) => bySlug[slug])
   }
 )
 
 export const makeSelectPostsBySlugs = () => createSelector(
   (state, props) => {
-    const postsBySlug = selectPosts(state).get('bySlug')
+    const postsBySlug = selectPosts(state).bySlug
     return props.slugs.map((slug) => postsBySlug[slug])
   },
   (posts) => posts
@@ -39,31 +39,31 @@ export const makeSelectPostsBySlugs = () => createSelector(
 
 export const makeSelectCurrentPostSlug = () => createSelector(
   selectCurrentPost,
-  (state) => state.get('slug')
+  (state) => state.slug
 )
 
 export const makeSelectCurrentPostFetching = () => createSelector(
   selectCurrentPost,
-  (state) => state.get('fetching')
+  (state) => state.fetching
 )
 
 export const makeSelectCurrentPost = () => createSelector(
   selectBlog,
   (state) => {
-    const slug = state.getIn(['currentPost', 'slug'])
+    const slug = state.currentPost.slug
     if (!slug) {
       return null
     }
-    return state.getIn(['posts', 'bySlug'])[slug]
+    return state.posts.bySlug[slug]
   }
 )
 
 export const makeSelectCurrentPostsCategorySlug = () => createSelector(
   selectPostsByCategory,
-  (state) => state.get('currentCategorySlug')
+  (state) => state.currentCategorySlug
 )
 
 export const makeSelectCurrentPostsCategory = () => createSelector(
   selectPostsByCategory,
-  (state) => state.get('currentCategory')
+  (state) => state.currentCategory
 )

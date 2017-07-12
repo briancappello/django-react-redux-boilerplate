@@ -1,5 +1,3 @@
-import { fromJS } from 'immutable'
-
 import {
   selectGlobal,
   makeSelectLocationState,
@@ -7,10 +5,10 @@ import {
 
 describe('selectGlobal', () => {
   it('should select the global state', () => {
-    const globalState = fromJS({})
-    const mockedState = fromJS({
+    const globalState = {}
+    const mockedState = {
       global: globalState,
-    })
+    }
     expect(selectGlobal(mockedState)).toEqual(globalState)
   })
 })
@@ -18,12 +16,12 @@ describe('selectGlobal', () => {
 describe('makeSelectLocationState', () => {
   const locationStateSelector = makeSelectLocationState()
   it('should select the route as a plain JS object', () => {
-    const route = fromJS({
+    const route = {
       locationBeforeTransitions: null,
-    })
-    const mockedState = fromJS({
+    }
+    const mockedState = {
       route,
-    })
-    expect(locationStateSelector(mockedState)).toEqual(route.toJS())
+    }
+    expect(locationStateSelector(mockedState)).toEqual(route)
   })
 })

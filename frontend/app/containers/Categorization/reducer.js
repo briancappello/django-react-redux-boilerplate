@@ -1,10 +1,8 @@
-import { fromJS } from 'immutable'
-
 import { fetchCategories } from './actions'
 
 import { login, logout } from 'containers/Auth/actions'
 
-const initialState = fromJS({
+const initialState = {
   categories: {
     slugs: [],
     bySlug: {},
@@ -12,7 +10,7 @@ const initialState = fromJS({
     fetching: false,
     error: null,
   },
-})
+}
 
 /* eslint-disable no-shadow */
 function categorizationReducer(state = initialState, action) {
@@ -23,18 +21,33 @@ function categorizationReducer(state = initialState, action) {
 
     case login.SUCCESS:
     case logout.FULFILL:
-      return state
-        .setIn(['categories', 'slugs'], [])
-        .setIn(['categories', 'bySlug'], {})
+      return {
+        ...state,
+        categories: {
+          ...state.categories,
+          slugs: [],
+          bySlug: {},
+        },
+      }
 
     case fetchCategories.TRIGGER:
-      return state
-        .setIn(['categories', 'loading'], true)
+      return {
+        ...state,
+        categories: {
+          ...state.categories,
+          loading: true,
+        },
+      }
 
     case fetchCategories.REQUEST:
-      return state
-        .setIn(['categories', 'loading'], true)
-        .setIn(['categories', 'fetching'], true)
+      return {
+        ...state,
+        categories: {
+          ...state.categories,
+          loading: true,
+          fetching: true,
+        },
+      }
 
     case fetchCategories.SUCCESS:
       const { categories } = action.payload
@@ -42,18 +55,33 @@ function categorizationReducer(state = initialState, action) {
         slugs.push(category.slug)
         bySlug[category.slug] = category
       })
-      return state
-        .setIn(['categories', 'slugs'], slugs)
-        .setIn(['categories', 'bySlug'], bySlug)
+      return {
+        ...state,
+        categories: {
+          ...state.categories,
+          slugs,
+          bySlug,
+        },
+      }
 
     case fetchCategories.FAILURE:
-      return state
-        .setIn(['categories', 'error'], action.payload.error)
+      return {
+        ...state,
+        categories: {
+          ...state.categories,
+          error: action.payload.error,
+        },
+      }
 
     case fetchCategories.FULFILL:
-      return state
-        .setIn(['categories', 'loading'], false)
-        .setIn(['categories', 'fetching'], false)
+      return {
+        ...state,
+        categories: {
+          ...state.categories,
+          loading: false,
+          fetching: false,
+        },
+      }
 
     default:
       return state

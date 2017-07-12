@@ -2,10 +2,8 @@
  * AppReducer
  */
 
-import { fromJS } from 'immutable'
-
-const initialState = fromJS({
-})
+const initialState = {
+}
 
 function appReducer(state = initialState, action) {
   switch (action.type) {

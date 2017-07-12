@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
-import { reset } from 'redux-form'
-import { reduxForm } from 'redux-form/immutable'
+import { reduxForm, reset } from 'redux-form'
 import { Alert, Button } from 'react-bootstrap'
 import Icon from 'react-fontawesome'
 

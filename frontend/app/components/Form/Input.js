@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap'
-import { Field } from 'redux-form/immutable'
+import { Field } from 'redux-form'
 import Icon from 'react-fontawesome'
 import classNames from 'classnames'
 import startCase from 'lodash/startCase'

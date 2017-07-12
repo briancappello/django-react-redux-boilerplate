@@ -4,27 +4,30 @@
  *
  */
 
-import { fromJS } from 'immutable'
 import { login, logout } from './actions'
 
-const initialState = fromJS({
+const initialState = {
   user: _loadSessionUser(),
   token: _loadSessionToken(),
-})
+}
 
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
 
     case login.SUCCESS:
       const { user, token } = action.payload
-      return state
-        .set('user', user)
-        .set('token', token)
+      return {
+        ...state,
+        user,
+        token,
+      }
 
     case logout.FULFILL:
-      return state
-        .set('user', null)
-        .set('token', null)
+      return {
+        ...state,
+        user: null,
+        token: null,
+      }
 
     default:
       return state

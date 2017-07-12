@@ -1,5 +1,3 @@
-import { fromJS } from 'immutable'
-
 import {
   FETCH_POST_IF_NEEDED,
   SET_CURRENT_POSTS_CATEGORY_SLUG,
@@ -13,7 +11,7 @@ import {
 
 import { login, logout } from 'containers/Auth/actions'
 
-const initialState = fromJS({
+const initialState = {
   currentPost: {
     loading: false,
     fetching: false,
@@ -38,7 +36,7 @@ const initialState = fromJS({
     slugs: [],
     lastUpdated: new Date(0),
   },
-})
+}
 
 /* eslint-disable no-shadow */
 function blogReducer(state = initialState, action) {
@@ -46,28 +44,59 @@ function blogReducer(state = initialState, action) {
 
     case login.SUCCESS:
     case logout.FULFILL:
-      return state
-        .setIn(['postsByCategory', 'currentCategory', 'posts'], [])
-        .setIn(['posts', 'slugs'], [])
-        .setIn(['posts', 'bySlug'], {})
-        .setIn(['posts', 'lastUpdated'], new Date(0))
+      return {
+        ...state,
+        postsByCategory: {
+          ...state.postsByCategory,
+          currentCategory: {
+            ...state.postsByCategory.currentCategory,
+            posts: [],
+          },
+        },
+        posts: {
+          ...state.posts,
+          slugs: [],
+          bySlug: {},
+          lastUpdated: new Date(0),
+        },
+      }
 
     case SET_CURRENT_POSTS_CATEGORY_SLUG:
-      return state
-        .setIn(['postsByCategory', 'currentCategorySlug'], action.payload.slug)
+      return {
+        ...state,
+        postsByCategory: {
+          ...state.postsByCategory,
+          currentCategorySlug: action.payload.slug,
+        },
+      }
 
     case FETCH_POST_IF_NEEDED:
-      return state
-        .setIn(['currentPost', 'slug'], action.payload.slug)
+      return {
+        ...state,
+        currentPost: {
+          ...state.currentPost,
+          slug: action.payload.slug,
+        },
+      }
 
     case fetchPost.TRIGGER:
-      return state
-        .setIn(['currentPost', 'loading'], true)
+      return {
+        ...state,
+        currentPost: {
+          ...state.currentPost,
+          loading: true,
+        },
+      }
 
     case fetchPost.REQUEST:
-      return state
-        .setIn(['currentPost', 'loading'], true)
-        .setIn(['currentPost', 'fetching'], true)
+      return {
+        ...state,
+        currentPost: {
+          ...state.currentPost,
+          loading: true,
+          fetching: true,
+        },
+      }
 
     case fetchPost.SUCCESS:
       const { post, prev, next } = action.payload
@@ -75,73 +104,143 @@ function blogReducer(state = initialState, action) {
       post.next = next
       post.publishDate = new Date(post.publishDate)
       post.lastUpdated = new Date(post.lastUpdated)
-      return state
-        .setIn(['posts', 'bySlug'], {
-          ...state.getIn(['posts', 'bySlug']),
-          [post.slug]: post,
-        })
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          bySlug: {
+            ...state.posts.bySlug,
+            [post.slug]: post,
+          },
+        },
+      }
 
     case fetchPost.FAILURE:
-      return state
-        .setIn(['currentPost', 'error'], action.payload.error)
+      return {
+        ...state,
+        currentPost: {
+          ...state.currentPost,
+          error: action.payload.error,
+        },
+      }
 
     case fetchPost.FULFILL:
-      return state
-        .setIn(['currentPost', 'fetching'], false)
-        .setIn(['currentPost', 'loading'], false)
+      return {
+        ...state,
+        currentPost: {
+          ...state.currentPost,
+          fetching: false,
+          loading: false,
+        },
+      }
 
     case fetchPosts.TRIGGER:
-      return state
-        .setIn(['posts', 'loading'], true)
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          loading: true,
+        },
+      }
 
     case fetchPosts.REQUEST:
-      return state
-        .setIn(['posts', 'loading'], true)
-        .setIn(['posts', 'fetching'], true)
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          loading: true,
+          fetching: true,
+        },
+      }
 
     case fetchPosts.SUCCESS:
-      const { posts } = action.payload
+      const { posts: newPosts } = action.payload
       const bySlug = {}
       const slugs = []
-      posts.forEach((post) => {
-        bySlug[post.slug] = post
-        slugs.push(post.slug)
+      state.posts.slugs.forEach((slug) => {
+        bySlug[slug] = state.posts.bySlug[slug]
+        slugs.push(slug)
       })
-      return state
-        .setIn(['posts', 'bySlug'], bySlug)
-        .setIn(['posts', 'slugs'], slugs)
-        .setIn(['posts', 'lastUpdated'], new Date())
+      newPosts.forEach((post) => {
+        bySlug[post.slug] = post
+        if (slugs.indexOf(post.slug) === -1) {
+          slugs.push(post.slug)
+        }
+      })
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          bySlug,
+          slugs,
+          lastUpdated: new Date(),
+        },
+      }
 
     case fetchPosts.FAILURE:
-      return state
-        .setIn(['posts', 'error'], action.payload.error)
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          error: action.payload.error,
+        },
+      }
 
     case fetchPosts.FULFILL:
-      return state
-        .setIn(['posts', 'loading'], false)
-        .setIn(['posts', 'fetching'], false)
+      return {
+        ...state,
+        posts: {
+          ...state.posts,
+          loading: false,
+          fetching: false,
+        },
+      }
 
     case fetchPostsByCategory.TRIGGER:
-      return state
-        .setIn(['postsByCategory', 'loading'], true)
-
+      return {
+        ...state,
+        postsByCategory: {
+          ...state.postsByCategory,
+          loading: true,
+        },
+      }
     case fetchPostsByCategory.REQUEST:
-      return state
-        .setIn(['postsByCategory', 'loading'], true)
-        .setIn(['postsByCategory', 'fetching'], true)
+      return {
+        ...state,
+        postsByCategory: {
+          ...state.postsByCategory,
+          loading: true,
+          fetching: true,
+        },
+      }
 
     case fetchPostsByCategory.SUCCESS:
-      return state
-        .setIn(['postsByCategory', 'currentCategory'], action.payload.category)
+      return {
+        ...state,
+        postsByCategory: {
+          ...state.postsByCategory,
+          currentCategory: action.payload.category,
+        },
+      }
 
     case fetchPostsByCategory.FAILURE:
-      return state
-        .setIn(['postsByCategory', 'error'], action.payload.error)
+      return {
+        ...state,
+        postsByCategory: {
+          ...state.postsByCategory,
+          error: action.payload.error,
+        },
+      }
 
     case fetchPostsByCategory.FULFILL:
-      return state
-        .setIn(['postsByCategory', 'loading'], false)
-        .setIn(['postsByCategory', 'fetching'], false)
+      return {
+        ...state,
+        postsByCategory: {
+          ...state.postsByCategory,
+          loading: false,
+          fetching: false,
+        },
+      }
 
     default:
       return state

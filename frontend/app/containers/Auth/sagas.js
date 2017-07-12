@@ -1,5 +1,5 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects'
-import { SubmissionError } from 'redux-form/immutable'
+import { SubmissionError } from 'redux-form'
 
 import { SERVER_URL } from 'config'
 import { post, authedPost } from 'utils/request'
@@ -13,8 +13,8 @@ export function* handleLogin({ payload }) {
   try {
     yield put(login.request())
     const { user, token } = yield call(post, loginUrl, {
-      username: payload.get('username'),
-      password: payload.get('password'),
+      username: payload.username,
+      password: payload.password,
     })
     _persistUserToken(user, token)
     yield put(login.success({ user, token }))
