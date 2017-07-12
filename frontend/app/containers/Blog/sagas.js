@@ -1,7 +1,7 @@
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 
 import { SERVER_URL } from 'config'
-import { isObject } from 'utils'
+import { isObject } from 'utils/types'
 import { authedGet } from 'utils/request'
 import { selectToken } from 'containers/Auth/selectors'
 

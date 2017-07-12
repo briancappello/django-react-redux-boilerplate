@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { isTruthy } from 'utils/types'
 
 export const selectBlog = (state) => state.get('blog')
 export const selectCurrentPost = (state) => state.getIn(['blog', 'currentPost'])
@@ -19,7 +20,7 @@ export const makeSelectPosts = () => createSelector(
   selectPosts,
   (state) => {
     const slugs = state.get('slugs')
-    if (!slugs.length) {
+    if (!isTruthy(slugs)) {
       return []
     }
 

@@ -5,7 +5,7 @@ import Icon from 'react-fontawesome'
 import classNames from 'classnames'
 import startCase from 'lodash/startCase'
 
-import { isArray } from 'utils'
+import { isArray } from 'utils/types'
 import { required as requiredValidator } from './validators'
 import './form.scss'
 

@@ -11,11 +11,3 @@ export const connect = (component, mergeProps, options) => {
     options
   )(component)
 }
-
-export const isArray = (variable) => {
-  return Object.prototype.toString.call(variable) === '[object Array]'
-}
-
-export const isObject = (variable) => {
-  return Object.prototype.toString.call(variable) === '[object Object]'
-}
