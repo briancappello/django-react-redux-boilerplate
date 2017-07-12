@@ -4,14 +4,17 @@ from ..models import Category
 from ..serializers import CategorySerializer, CategoryDetailSerializer
 
 
-class CategoryListView(generics.ListAPIView):
-    queryset = Category.objects.all()
+class CategoryViewMixin(object):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        return Category.objects.find_all_with_posts_by_user(self.request.user)
+
+
+class CategoryListView(CategoryViewMixin, generics.ListAPIView):
     serializer_class = CategorySerializer
-    permission_classes = (permissions.AllowAny,)
 
 
-class CategoryDetailView(generics.RetrieveAPIView):
-    queryset = Category.objects.all()
+class CategoryDetailView(CategoryViewMixin, generics.RetrieveAPIView):
     serializer_class = CategoryDetailSerializer
-    permission_classes = (permissions.AllowAny,)
     lookup_field = 'slug'
