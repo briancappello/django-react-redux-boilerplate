@@ -21,14 +21,14 @@ import {
   makeSelectCurrentPostSlug,
   makeSelectCurrentPost,
   makeSelectCurrentPostFetching,
-  makeSelectPostsById,
+  makeSelectPostsBySlugs,
   makeSelectPostsLastUpdated,
   makeSelectPostsFetching,
   makeSelectCurrentPostsCategory,
   makeSelectCurrentPostsCategorySlug,
 } from './selectors'
 
-import { makeSelectCategoriesBySlug } from 'containers/Categorization/selectors'
+import { makeSelectCategoryBySlug } from 'containers/Categorization/selectors'
 
 const MINUTE = 60 * 1000  // in millis
 const _30_MINUTES = 30 * MINUTE
@@ -95,21 +95,23 @@ function* handleFetchPosts() {
 
 function* handleFetchPostsByCategoryIfNeeded() {
   const categorySlug = yield select(makeSelectCurrentPostsCategorySlug())
+
+  // check if blog.postsByCategory.currentCategory is already correctly set
   let category = yield select(makeSelectCurrentPostsCategory())
   if (categorySlug === category.slug) {
     return
   }
 
-  const categoriesBySlug = yield select(makeSelectCategoriesBySlug())
-  const postsById = yield select(makeSelectPostsById())
-  category = categoriesBySlug[categorySlug]
-
+  // otherwise try to pull the category from categorization.categories
+  category = yield select(makeSelectCategoryBySlug(), { slug: categorySlug })
   if (category && category.posts && category.posts.length) {
+    // check if its posts data has already been populated
     if (isObject(category.posts[0])) {
       return
     }
 
-    const posts = category.posts.map((postId) => postsById[postId])
+    // otherwise check if we have the necessary data loaded in blog.posts
+    const posts = yield select(makeSelectPostsBySlugs(), { slugs: category.posts })
     if (posts.filter((x) => x).length === posts.length) {
       category.posts = posts
       yield put(fetchPostsByCategory.success({ category }))
@@ -118,6 +120,7 @@ function* handleFetchPostsByCategoryIfNeeded() {
     }
   }
 
+  // if we got here, gotta fetch the data from the server
   yield call(handleFetchPostsByCategory)
 }
 

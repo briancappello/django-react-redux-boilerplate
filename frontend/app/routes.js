@@ -5,16 +5,16 @@
 import { getAsyncInjectors } from './utils/asyncInjectors';
 
 const errorLoading = (err) => {
-  console.error('Dynamic page loading failed', err); // eslint-disable-line no-console
-};
+  console.error('Dynamic page loading failed', err) // eslint-disable-line no-console
+}
 
 const loadModule = (cb) => (componentModule) => {
-  cb(null, componentModule.default);
-};
+  cb(null, componentModule.default)
+}
 
 export default function createRoutes(store) {
   // create reusable async injectors using getAsyncInjectors factory
-  const { injectReducer, injectSagas } = getAsyncInjectors(store);
+  const { injectReducer, injectSagas } = getAsyncInjectors(store)
 
   return [
     {
@@ -27,9 +27,9 @@ export default function createRoutes(store) {
           import('containers/Categorization/reducer'),
           import('containers/Categorization/sagas'),
           import('containers/HomePage'),
-        ]);
+        ])
 
-        const renderRoute = loadModule(cb);
+        const renderRoute = loadModule(cb)
 
         importModules.then(([
           blogReducer,
@@ -38,18 +38,19 @@ export default function createRoutes(store) {
           categorizationSagas,
           component,
         ]) => {
-          injectReducer('blog', blogReducer.default);
-          injectSagas(blogSagas.default);
+          injectReducer('blog', blogReducer.default)
+          injectSagas(blogSagas.default)
 
           injectReducer('categorization', categorizationReducer.default)
           injectSagas(categorizationSagas.default)
 
-          renderRoute(component);
-        });
+          renderRoute(component)
+        })
 
-        importModules.catch(errorLoading);
+        importModules.catch(errorLoading)
       },
-    }, {
+    },
+    {
       path: '/login',
       name: 'login',
       getComponent(nextState, cb) {
@@ -65,15 +66,17 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading)
       },
-    }, {
+    },
+    {
       path: '/features',
       name: 'features',
       getComponent(nextState, cb) {
         import('containers/FeaturePage')
           .then(loadModule(cb))
-          .catch(errorLoading);
+          .catch(errorLoading)
       },
-    }, {
+    },
+    {
       path: '/posts/:slug',
       name: 'post-detail',
       getComponent(nextState, cb) {
@@ -94,7 +97,8 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading)
       },
-    }, {
+    },
+    {
       path: '/posts/categories/:slug',
       name: 'post-category-detail',
       getComponent(nextState, cb) {
@@ -133,8 +137,8 @@ export default function createRoutes(store) {
       getComponent(nextState, cb) {
         import('containers/NotFoundPage')
           .then(loadModule(cb))
-          .catch(errorLoading);
+          .catch(errorLoading)
       },
     },
-  ];
+  ]
 }

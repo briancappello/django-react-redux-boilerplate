@@ -4,9 +4,8 @@ import { fetchCategories } from './actions'
 
 const initialState = fromJS({
   categories: {
-    ids: [],
-    byId: {},
-    slugIds: {},
+    slugs: [],
+    bySlug: {},
     loading: false,
     fetching: false,
     error: null,
@@ -15,9 +14,8 @@ const initialState = fromJS({
 
 /* eslint-disable no-shadow */
 function categorizationReducer(state = initialState, action) {
-  const ids = []
-  const byId = {}
-  const slugIds = {}
+  const slugs = []
+  const bySlug = {}
 
   switch (action.type) {
 
@@ -33,14 +31,12 @@ function categorizationReducer(state = initialState, action) {
     case fetchCategories.SUCCESS:
       const { categories } = action.payload
       categories.forEach((category) => {
-        ids.push(category.id)
-        byId[category.id] = category
-        slugIds[category.slug] = category.id
+        slugs.push(category.slug)
+        bySlug[category.slug] = category
       })
       return state
-        .setIn(['categories', 'ids'], ids)
-        .setIn(['categories', 'byId'], byId)
-        .setIn(['categories', 'slugIds'], slugIds)
+        .setIn(['categories', 'slugs'], slugs)
+        .setIn(['categories', 'bySlug'], bySlug)
 
     case fetchCategories.FAILURE:
       return state

@@ -5,11 +5,6 @@ export const selectCurrentPost = (state) => state.getIn(['blog', 'currentPost'])
 export const selectPosts = (state) => state.getIn(['blog', 'posts'])
 export const selectPostsByCategory = (state) => state.getIn(['blog', 'postsByCategory'])
 
-export const makeSelectBlog = () => createSelector(
-  selectBlog,
-  (state) => state.toJS()
-)
-
 export const makeSelectPostsLastUpdated = () => createSelector(
   selectPosts,
   (state) => state.get('lastUpdated')
@@ -33,17 +28,12 @@ export const makeSelectPosts = () => createSelector(
   }
 )
 
-export const makeSelectPostsById = () => createSelector(
-  selectPosts,
-  (state) => {
-    const idSlugs = state.get('idSlugs')
-    const bySlug = state.get('bySlug')
-    const byId = {}
-    Object.keys(idSlugs).forEach((id) => {
-      byId[id] = bySlug[idSlugs[id]]
-    })
-    return byId
-  }
+export const makeSelectPostsBySlugs = () => createSelector(
+  (state, props) => {
+    const postsBySlug = selectPosts(state).get('bySlug')
+    return props.slugs.map((slug) => postsBySlug[slug])
+  },
+  (posts) => posts
 )
 
 export const makeSelectCurrentPostSlug = () => createSelector(

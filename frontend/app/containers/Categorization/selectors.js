@@ -10,25 +10,17 @@ export const makeSelectCategoriesFetching = () => createSelector(
 export const makeSelectCategories = () => createSelector(
   selectCategories,
   (state) => {
-    const ids = state.get('ids')
-    if (!ids || !ids.length) {
+    const slugs = state.get('slugs')
+    if (!slugs || !slugs.length) {
       return []
     }
 
-    const byId = state.get('byId')
-    return ids.map((id) => byId[id])
+    const bySlug = state.get('bySlug')
+    return slugs.map((slug) => bySlug[slug])
   }
 )
 
-export const makeSelectCategoriesBySlug = () => createSelector(
-  selectCategories,
-  (state) => {
-    const slugIds = state.get('slugIds')
-    const byId = state.get('byId')
-    const bySlug = {}
-    Object.keys(slugIds).forEach((slug) => {
-      bySlug[slug] = byId[slugIds[slug]]
-    })
-    return bySlug
-  }
+export const makeSelectCategoryBySlug = () => createSelector(
+  (state, props) => selectCategories(state).get('bySlug')[props.slug],
+  (category) => category
 )
