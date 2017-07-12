@@ -1,7 +1,15 @@
 import { fromJS } from 'immutable'
 
-import { FETCH_POST_IF_NEEDED } from './constants'
-import { fetchPost, fetchPosts } from './actions'
+import {
+  FETCH_POST_IF_NEEDED,
+  SET_CURRENT_POSTS_CATEGORY_SLUG,
+} from './constants'
+
+import {
+  fetchPost,
+  fetchPosts,
+  fetchPostsByCategory,
+} from './actions'
 
 const initialState = fromJS({
   currentPost: {
@@ -10,12 +18,23 @@ const initialState = fromJS({
     error: null,
     slug: null,
   },
+  postsByCategory: {
+    currentCategorySlug: null,
+    currentCategory: {
+      name: null,
+      posts: [],
+    },
+    loading: false,
+    fetching: false,
+    error: null,
+  },
   posts: {
     loading: false,
     fetching: false,
     error: null,
     bySlug: {},
-    order: [],
+    slugs: [],
+    idSlugs: {},
     lastUpdated: null,
   },
 })
@@ -23,6 +42,10 @@ const initialState = fromJS({
 /* eslint-disable no-shadow */
 function blogReducer(state = initialState, action) {
   switch (action.type) {
+
+    case SET_CURRENT_POSTS_CATEGORY_SLUG:
+      return state
+        .setIn(['postsByCategory', 'currentCategorySlug'], action.payload.slug)
 
     case FETCH_POST_IF_NEEDED:
       return state
@@ -34,6 +57,7 @@ function blogReducer(state = initialState, action) {
 
     case fetchPost.REQUEST:
       return state
+        .setIn(['currentPost', 'loading'], true)
         .setIn(['currentPost', 'fetching'], true)
 
     case fetchPost.SUCCESS:
@@ -63,19 +87,23 @@ function blogReducer(state = initialState, action) {
 
     case fetchPosts.REQUEST:
       return state
+        .setIn(['posts', 'loading'], true)
         .setIn(['posts', 'fetching'], true)
 
     case fetchPosts.SUCCESS:
       const { posts } = action.payload
       const bySlug = {}
-      const order = []
+      const slugs = []
+      const idSlugs = {}
       posts.forEach((post) => {
         bySlug[post.slug] = post
-        order.push(post.slug)
+        slugs.push(post.slug)
+        idSlugs[post.id] = post.slug
       })
       return state
         .setIn(['posts', 'bySlug'], bySlug)
-        .setIn(['posts', 'order'], order)
+        .setIn(['posts', 'slugs'], slugs)
+        .setIn(['posts', 'idSlugs'], idSlugs)
         .setIn(['posts', 'lastUpdated'], new Date())
 
     case fetchPosts.FAILURE:
@@ -86,6 +114,28 @@ function blogReducer(state = initialState, action) {
       return state
         .setIn(['posts', 'loading'], false)
         .setIn(['posts', 'fetching'], false)
+
+    case fetchPostsByCategory.TRIGGER:
+      return state
+        .setIn(['postsByCategory', 'loading'], true)
+
+    case fetchPostsByCategory.REQUEST:
+      return state
+        .setIn(['postsByCategory', 'loading'], true)
+        .setIn(['postsByCategory', 'fetching'], true)
+
+    case fetchPostsByCategory.SUCCESS:
+      return state
+        .setIn(['postsByCategory', 'currentCategory'], action.payload.category)
+
+    case fetchPostsByCategory.FAILURE:
+      return state
+        .setIn(['postsByCategory', 'error'], action.payload.error)
+
+    case fetchPostsByCategory.FULFILL:
+      return state
+        .setIn(['postsByCategory', 'loading'], false)
+        .setIn(['postsByCategory', 'fetching'], false)
 
     default:
       return state

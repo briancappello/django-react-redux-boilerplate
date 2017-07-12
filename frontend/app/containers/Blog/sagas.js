@@ -1,18 +1,34 @@
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 
 import { SERVER_URL } from 'config'
+import { isObject } from 'utils'
 import { authedGet } from 'utils/request'
 import { selectToken } from 'containers/Auth/selectors'
 
-import { fetchPost, fetchPosts } from './actions'
-import { FETCH_POST_IF_NEEDED, FETCH_POSTS_IF_NEEDED } from './constants'
+import {
+  fetchPost,
+  fetchPosts,
+  fetchPostsByCategory,
+} from './actions'
+
+import {
+  FETCH_POST_IF_NEEDED,
+  FETCH_POSTS_IF_NEEDED,
+  FETCH_POSTS_BY_CATEGORY_IF_NEEDED,
+} from './constants'
+
 import {
   makeSelectCurrentPostSlug,
   makeSelectCurrentPost,
   makeSelectCurrentPostFetching,
+  makeSelectPostsById,
   makeSelectPostsLastUpdated,
   makeSelectPostsFetching,
+  makeSelectCurrentPostsCategory,
+  makeSelectCurrentPostsCategorySlug,
 } from './selectors'
+
+import { makeSelectCategoriesBySlug } from 'containers/Categorization/selectors'
 
 const MINUTE = 60 * 1000  // in millis
 const _30_MINUTES = 30 * MINUTE
@@ -77,6 +93,50 @@ function* handleFetchPosts() {
   }
 }
 
+function* handleFetchPostsByCategoryIfNeeded() {
+  const categorySlug = yield select(makeSelectCurrentPostsCategorySlug())
+  let category = yield select(makeSelectCurrentPostsCategory())
+  if (categorySlug === category.slug) {
+    return
+  }
+
+  const categoriesBySlug = yield select(makeSelectCategoriesBySlug())
+  const postsById = yield select(makeSelectPostsById())
+  category = categoriesBySlug[categorySlug]
+
+  if (category && category.posts && category.posts.length) {
+    if (isObject(category.posts[0])) {
+      return
+    }
+
+    const posts = category.posts.map((postId) => postsById[postId])
+    if (posts.filter((x) => x).length === posts.length) {
+      category.posts = posts
+      yield put(fetchPostsByCategory.success({ category }))
+      yield put(fetchPostsByCategory.fulfill())
+      return
+    }
+  }
+
+  yield call(handleFetchPostsByCategory)
+}
+
+function* handleFetchPostsByCategory() {
+  const categorySlug = yield select(makeSelectCurrentPostsCategorySlug())
+  const postsByCategoryUrl = `${SERVER_URL}/api/categories/${categorySlug}/`
+  const token = yield select(selectToken())
+
+  try {
+    yield put(fetchPostsByCategory.request())
+    const category = yield call(authedGet, postsByCategoryUrl, token)
+    yield put(fetchPostsByCategory.success({ category }))
+  } catch (error) {
+    yield put(fetchPostsByCategory.failure({ error }))
+  } finally {
+    yield put(fetchPostsByCategory.fulfill())
+  }
+}
+
 function* watchFetchPostIfNeeded() {
   yield takeEvery(FETCH_POST_IF_NEEDED, handleFetchPostIfNeeded)
 }
@@ -93,9 +153,14 @@ function* watchFetchPosts() {
   yield takeLatest(fetchPosts.TRIGGER, handleFetchPosts)
 }
 
+function* watchFetchPostsByCategoryIfNeeded() {
+  yield takeEvery(FETCH_POSTS_BY_CATEGORY_IF_NEEDED, handleFetchPostsByCategoryIfNeeded)
+}
+
 export default [
   watchFetchPostIfNeeded,
   watchFetchPost,
   watchFetchPostsIfNeeded,
   watchFetchPosts,
+  watchFetchPostsByCategoryIfNeeded,
 ]

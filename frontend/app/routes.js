@@ -24,14 +24,25 @@ export default function createRoutes(store) {
         const importModules = Promise.all([
           import('containers/Blog/reducer'),
           import('containers/Blog/sagas'),
+          import('containers/Categorization/reducer'),
+          import('containers/Categorization/sagas'),
           import('containers/HomePage'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([blogReducer, blogSagas, component]) => {
+        importModules.then(([
+          blogReducer,
+          blogSagas,
+          categorizationReducer,
+          categorizationSagas,
+          component,
+        ]) => {
           injectReducer('blog', blogReducer.default);
           injectSagas(blogSagas.default);
+
+          injectReducer('categorization', categorizationReducer.default)
+          injectSagas(categorizationSagas.default)
 
           renderRoute(component);
         });
@@ -84,6 +95,39 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading)
       },
     }, {
+      path: '/posts/categories/:slug',
+      name: 'post-category-detail',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/Blog/reducer'),
+          import('containers/Blog/sagas'),
+          import('containers/Categorization/reducer'),
+          import('containers/Categorization/sagas'),
+          import('containers/Blog/CategoryPosts'),
+        ])
+
+        const renderRoute = loadModule(cb)
+
+        importModules.then(([
+          blogReducer,
+          blogSagas,
+          categorizationReducer,
+          categorizationSagas,
+          component,
+        ]) => {
+          injectReducer('blog', blogReducer.default)
+          injectSagas(blogSagas.default)
+
+          injectReducer('categorization', categorizationReducer.default)
+          injectSagas(categorizationSagas.default)
+
+          renderRoute(component)
+        })
+
+        importModules.catch(errorLoading)
+      },
+    },
+    {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

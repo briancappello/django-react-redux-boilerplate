@@ -3,6 +3,7 @@ import { createSelector } from 'reselect';
 export const selectBlog = (state) => state.get('blog')
 export const selectCurrentPost = (state) => state.getIn(['blog', 'currentPost'])
 export const selectPosts = (state) => state.getIn(['blog', 'posts'])
+export const selectPostsByCategory = (state) => state.getIn(['blog', 'postsByCategory'])
 
 export const makeSelectBlog = () => createSelector(
   selectBlog,
@@ -22,13 +23,26 @@ export const makeSelectPostsFetching = () => createSelector(
 export const makeSelectPosts = () => createSelector(
   selectPosts,
   (state) => {
-    const order = state.get('order')
-    if (!order.length) {
+    const slugs = state.get('slugs')
+    if (!slugs.length) {
       return []
     }
 
     const bySlug = state.get('bySlug')
-    return order.map((slug) => bySlug[slug])
+    return slugs.map((slug) => bySlug[slug])
+  }
+)
+
+export const makeSelectPostsById = () => createSelector(
+  selectPosts,
+  (state) => {
+    const idSlugs = state.get('idSlugs')
+    const bySlug = state.get('bySlug')
+    const byId = {}
+    Object.keys(idSlugs).forEach((id) => {
+      byId[id] = bySlug[idSlugs[id]]
+    })
+    return byId
   }
 )
 
@@ -51,4 +65,14 @@ export const makeSelectCurrentPost = () => createSelector(
     }
     return state.getIn(['posts', 'bySlug'])[slug]
   }
+)
+
+export const makeSelectCurrentPostsCategorySlug = () => createSelector(
+  selectPostsByCategory,
+  (state) => state.get('currentCategorySlug')
+)
+
+export const makeSelectCurrentPostsCategory = () => createSelector(
+  selectPostsByCategory,
+  (state) => state.get('currentCategory')
 )

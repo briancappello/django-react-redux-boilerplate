@@ -8,7 +8,9 @@ import { createStructuredSelector } from 'reselect'
 import { bindActionCreators } from 'redux'
 import { connect } from 'utils'
 
+import { Row, Col } from 'react-bootstrap'
 import { PostPreview } from 'components/PostPreview'
+import Categories from 'containers/Categorization/Categories'
 
 import { fetchPostsIfNeeded } from 'containers/Blog/actions'
 import { makeSelectPosts } from 'containers/Blog/selectors'
@@ -42,10 +44,16 @@ export class HomePage extends React.Component {
             { name: 'description', content: 'A React.js Boilerplate application homepage' },
           ]}
         />
-        <div>
-          <h1>Latest Posts</h1>
-          {posts.map((post) => <PostPreview post={post} key={post.slug} />)}
-        </div>
+        <Row>
+          <Col md={9} xs={12}>
+            <h1>Latest Posts</h1>
+            {posts.map((post) => <PostPreview post={post} key={post.slug} />)}
+          </Col>
+          <Col md={3} xs={12}>
+            <h2>Categories</h2>
+            <Categories />
+          </Col>
+        </Row>
       </article>
     );
   }

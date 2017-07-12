@@ -21,6 +21,10 @@ export const isDate = (date) => {
   return Object.prototype.toString.call(date) === '[object Date]'
 }
 
+export const isObject = (variable) => {
+  return Object.prototype.toString.call(variable) === '[object Object]'
+}
+
 export const formatDate = (date) => {
   if (!date) {
     return ''
