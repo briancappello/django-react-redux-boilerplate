@@ -2,6 +2,8 @@ import { fromJS } from 'immutable'
 
 import { fetchCategories } from './actions'
 
+import { login, logout } from 'containers/Auth/actions'
+
 const initialState = fromJS({
   categories: {
     slugs: [],
@@ -18,6 +20,12 @@ function categorizationReducer(state = initialState, action) {
   const bySlug = {}
 
   switch (action.type) {
+
+    case login.SUCCESS:
+    case logout.FULFILL:
+      return state
+        .setIn(['categories', 'slugs'], [])
+        .setIn(['categories', 'bySlug'], {})
 
     case fetchCategories.TRIGGER:
       return state

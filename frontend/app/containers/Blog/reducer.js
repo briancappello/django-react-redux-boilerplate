@@ -11,6 +11,8 @@ import {
   fetchPostsByCategory,
 } from './actions'
 
+import { login, logout } from 'containers/Auth/actions'
+
 const initialState = fromJS({
   currentPost: {
     loading: false,
@@ -34,14 +36,21 @@ const initialState = fromJS({
     error: null,
     bySlug: {},
     slugs: [],
-    idSlugs: {},
-    lastUpdated: null,
+    lastUpdated: new Date(0),
   },
 })
 
 /* eslint-disable no-shadow */
 function blogReducer(state = initialState, action) {
   switch (action.type) {
+
+    case login.SUCCESS:
+    case logout.FULFILL:
+      return state
+        .setIn(['postsByCategory', 'currentCategory', 'posts'], [])
+        .setIn(['posts', 'slugs'], [])
+        .setIn(['posts', 'bySlug'], {})
+        .setIn(['posts', 'lastUpdated'], new Date(0))
 
     case SET_CURRENT_POSTS_CATEGORY_SLUG:
       return state
@@ -94,16 +103,13 @@ function blogReducer(state = initialState, action) {
       const { posts } = action.payload
       const bySlug = {}
       const slugs = []
-      const idSlugs = {}
       posts.forEach((post) => {
         bySlug[post.slug] = post
         slugs.push(post.slug)
-        idSlugs[post.id] = post.slug
       })
       return state
         .setIn(['posts', 'bySlug'], bySlug)
         .setIn(['posts', 'slugs'], slugs)
-        .setIn(['posts', 'idSlugs'], idSlugs)
         .setIn(['posts', 'lastUpdated'], new Date())
 
     case fetchPosts.FAILURE:

@@ -34,6 +34,10 @@ export class HomePage extends React.Component {
     this.props.fetchPostsIfNeeded()
   }
 
+  componentWillUpdate() {
+    this.props.fetchPostsIfNeeded()
+  }
+
   render() {
     const { posts } = this.props
     return (

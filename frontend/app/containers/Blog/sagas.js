@@ -1,8 +1,8 @@
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 
 import { SERVER_URL } from 'config'
-import { isObject } from 'utils/types'
-import { authedGet } from 'utils/request'
+import { isObject, isTruthy } from 'utils/types'
+import { authedGet, authedPost } from 'utils/request'
 import { selectToken } from 'containers/Auth/selectors'
 
 import {
@@ -21,6 +21,7 @@ import {
   makeSelectCurrentPostSlug,
   makeSelectCurrentPost,
   makeSelectCurrentPostFetching,
+  makeSelectPosts,
   makeSelectPostsBySlugs,
   makeSelectPostsLastUpdated,
   makeSelectPostsFetching,
@@ -31,7 +32,7 @@ import {
 import { makeSelectCategoryBySlug } from 'containers/Categorization/selectors'
 
 const MINUTE = 60 * 1000  // in millis
-const _30_MINUTES = 30 * MINUTE
+const FIVE_MINUTES = 5 * MINUTE
 
 function* handleFetchPostIfNeeded() {
   const isFetching = yield select(makeSelectCurrentPostFetching())
@@ -67,13 +68,10 @@ function* handleFetchPostsIfNeeded() {
     return
   }
 
-  /**
-   * FIXME: maybe better to just POST the last updated timestamp to
-   * the server and let it return any new/updated posts or not
-   */
   const lastUpdated = yield select(makeSelectPostsLastUpdated())
   const now = new Date()
-  if (!lastUpdated || now - lastUpdated > _30_MINUTES) {
+  const posts = yield select(makeSelectPosts())
+  if (!lastUpdated || (!isTruthy(posts) && now - lastUpdated > FIVE_MINUTES)) {
     yield call(handleFetchPosts)
   }
 }
@@ -81,10 +79,11 @@ function* handleFetchPostsIfNeeded() {
 function* handleFetchPosts() {
   const listPostsUrl = `${SERVER_URL}/api/posts/`
   const token = yield select(selectToken())
+  const lastUpdated = yield select(makeSelectPostsLastUpdated())
 
   try {
     yield put(fetchPosts.request())
-    const posts = yield call(authedGet, listPostsUrl, token)
+    const posts = yield call(authedPost, listPostsUrl, token, { lastUpdated })
     yield put(fetchPosts.success({ posts }))
   } catch (error) {
     yield put(fetchPosts.failure({ error }))

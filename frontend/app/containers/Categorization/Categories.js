@@ -29,6 +29,10 @@ export class Categories extends React.Component {
     this.props.fetchCategoriesIfNeeded()
   }
 
+  componentWillUpdate() {
+    this.props.fetchCategoriesIfNeeded()
+  }
+
   render() {
     const { categories } = this.props
     return (

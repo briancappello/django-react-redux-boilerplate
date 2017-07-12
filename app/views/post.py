@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import api_view, permission_classes
@@ -9,10 +11,13 @@ from ..permissions import IsOwnerOrIsPublic
 from ..serializers import PostSerializer, PostDetailSerializer
 
 
-@api_view()
-@permission_classes((permissions.IsAuthenticatedOrReadOnly,))
+@api_view(['GET', 'POST'])
+@permission_classes((permissions.AllowAny,))
 def list_posts(request):
-    posts = Post.objects.find_all_by_is_public_or_user(request.user)
+    last_updated = request.data.get('lastUpdated', datetime.datetime.fromtimestamp(0))
+    posts = Post.objects.find_all_by_is_public_or_user(request.user).filter(
+        last_updated__gt=last_updated
+    )
     return Response(PostSerializer(posts, many=True).data)
 
 
