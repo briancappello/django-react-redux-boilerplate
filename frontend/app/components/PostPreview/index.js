@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
-import { formatDate } from 'utils'
+import { formatDate } from 'utils/dates'
 
 import './post-preview.scss'
 

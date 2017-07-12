@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { Link } from 'react-router'
 
-import { formatDate, isSameDay } from 'utils'
+import { formatDate, isSameDay } from 'utils/dates'
 
 import Highlight from 'react-highlight/lib/optimized'
 import { HIGHLIGHT_LANGUAGES } from 'config'
