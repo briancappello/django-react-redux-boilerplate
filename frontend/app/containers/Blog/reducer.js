@@ -2,7 +2,7 @@ import { LOCATION_CHANGE } from 'react-router-redux'
 
 import {
   FETCH_POST_IF_NEEDED,
-  SET_CURRENT_POSTS_CATEGORY_SLUG,
+  SET_POSTS_BY_CATEGORY_CURRENT_CATEGORY_SLUG,
 } from './constants'
 
 import {
@@ -73,24 +73,16 @@ function blogReducer(state = initialState, action) {
         },
       }
 
-    case SET_CURRENT_POSTS_CATEGORY_SLUG:
-      return { ...state,
-        postsByCategory: { ...state.postsByCategory,
-          currentCategorySlug: action.payload.slug,
-        },
-      }
+
+    /**
+     * fetch post
+     * ==========
+     */
 
     case FETCH_POST_IF_NEEDED:
       return { ...state,
         currentPost: { ...state.currentPost,
           slug: action.payload.slug,
-        },
-      }
-
-    case fetchPost.TRIGGER:
-      return { ...state,
-        currentPost: { ...state.currentPost,
-          loading: true,
         },
       }
 
@@ -131,12 +123,11 @@ function blogReducer(state = initialState, action) {
         },
       }
 
-    case fetchPosts.TRIGGER:
-      return { ...state,
-        posts: { ...state.posts,
-          loading: true,
-        },
-      }
+
+    /**
+     * fetch posts
+     * ===========
+     */
 
     case fetchPosts.REQUEST:
       return { ...state,
@@ -182,12 +173,19 @@ function blogReducer(state = initialState, action) {
         },
       }
 
-    case fetchPostsByCategory.TRIGGER:
+
+    /**
+     * fetch postsByCategory
+     * =====================
+     */
+
+    case SET_POSTS_BY_CATEGORY_CURRENT_CATEGORY_SLUG:
       return { ...state,
         postsByCategory: { ...state.postsByCategory,
-          loading: true,
+          currentCategorySlug: action.payload.slug,
         },
       }
+
     case fetchPostsByCategory.REQUEST:
       return { ...state,
         postsByCategory: { ...state.postsByCategory,

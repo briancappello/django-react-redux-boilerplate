@@ -8,9 +8,9 @@ import Blog from 'components/Blog'
 
 import {
   fetchPostsByCategoryIfNeeded,
-  setCurrentPostsCategorySlug,
+  setPostsByCategoryCurrentCategorySlug,
 } from './actions'
-import { makeSelectCurrentPostsCategory } from './selectors'
+import { makeSelectPostsByCategoryCurrentCategory } from './selectors'
 
 import { fetchCategoriesIfNeeded } from 'containers/Categorization/actions'
 import { makeSelectCategories } from 'containers/Categorization/selectors'
@@ -28,19 +28,19 @@ export class CategoryPosts extends React.Component {
     }),
     fetchCategoriesIfNeeded: PropTypes.func,
     fetchPostsByCategoryIfNeeded: PropTypes.func,
-    setCurrentPostsCategorySlug: PropTypes.func,
+    setPostsByCategoryCurrentCategorySlug: PropTypes.func,
   }
 
   static mapStateToProps = createStructuredSelector({
     categories: makeSelectCategories(),
-    currentCategory: makeSelectCurrentPostsCategory(),
+    currentCategory: makeSelectPostsByCategoryCurrentCategory(),
   })
 
   static mapDispatchToProps = (dispatch) => ({
     ...bindActionCreators({
       fetchCategoriesIfNeeded,
       fetchPostsByCategoryIfNeeded,
-      setCurrentPostsCategorySlug,
+      setPostsByCategoryCurrentCategorySlug,
     }, dispatch),
   })
 
@@ -54,7 +54,7 @@ export class CategoryPosts extends React.Component {
 
   fetchDataIfNeeded(props) {
     const { routeParams: { slug } } = props
-    this.props.setCurrentPostsCategorySlug(slug)
+    this.props.setPostsByCategoryCurrentCategorySlug(slug)
     this.props.fetchCategoriesIfNeeded()
     this.props.fetchPostsByCategoryIfNeeded(slug)
   }

@@ -5,7 +5,7 @@ import {
   FETCH_POST_IF_NEEDED,
   FETCH_POSTS,
   FETCH_POSTS_IF_NEEDED,
-  SET_CURRENT_POSTS_CATEGORY_SLUG,
+  SET_POSTS_BY_CATEGORY_CURRENT_CATEGORY_SLUG,
   FETCH_POSTS_BY_CATEGORY,
   FETCH_POSTS_BY_CATEGORY_IF_NEEDED,
 } from './constants'
@@ -37,8 +37,8 @@ export const fetchPosts = createRoutine(FETCH_POSTS)
  * Posts By Category
  */
 
-export const setCurrentPostsCategorySlug = (slug) => ({
-  type: SET_CURRENT_POSTS_CATEGORY_SLUG,
+export const setPostsByCategoryCurrentCategorySlug = (slug) => ({
+  type: SET_POSTS_BY_CATEGORY_CURRENT_CATEGORY_SLUG,
   payload: { slug },
 })
 

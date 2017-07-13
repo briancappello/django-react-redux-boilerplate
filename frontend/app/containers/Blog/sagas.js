@@ -1,9 +1,11 @@
-import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
+import { takeEvery, call, put, select } from 'redux-saga/effects'
 
 import { SERVER_URL } from 'config'
 import { isObject, isTruthy } from 'utils/types'
 import { authedGet, authedPost } from 'utils/request'
 import { makeSelectToken } from 'containers/Auth/selectors'
+
+import { makeSelectCategoryBySlug } from 'containers/Categorization/selectors'
 
 import {
   fetchPost,
@@ -18,25 +20,31 @@ import {
 } from './constants'
 
 import {
-  makeSelectCurrentPostSlug,
   makeSelectCurrentPost,
   makeSelectCurrentPostError,
   makeSelectCurrentPostFetching,
+  makeSelectCurrentPostSlug,
+
+  makeSelectPostsByCategoryCurrentCategory,
+  makeSelectPostsByCategoryCurrentCategorySlug,
+  makeSelectPostsByCategoryError,
+  makeSelectPostsByCategoryFetching,
+
   makeSelectPosts,
   makeSelectPostsBySlugs,
-  makeSelectPostsLastUpdated,
   makeSelectPostsError,
   makeSelectPostsFetching,
-  makeSelectCurrentPostsCategory,
-  makeSelectCurrentPostsCategoryError,
-  makeSelectCurrentPostsCategoryFetching,
-  makeSelectCurrentPostsCategorySlug,
+  makeSelectPostsLastUpdated,
 } from './selectors'
-
-import { makeSelectCategoryBySlug } from 'containers/Categorization/selectors'
 
 const MINUTE = 60 * 1000  // in millis
 const FIVE_MINUTES = 5 * MINUTE
+
+
+/**
+ * fetch post
+ * ==========
+ */
 
 function* handleFetchPostIfNeeded() {
   const isFetching = yield select(makeSelectCurrentPostFetching())
@@ -66,6 +74,12 @@ function* handleFetchPost() {
     yield put(fetchPost.fulfill())
   }
 }
+
+
+/**
+ * fetch posts
+ * ===========
+ */
 
 function* handleFetchPostsIfNeeded() {
   const isFetching = yield select(makeSelectPostsFetching())
@@ -98,16 +112,22 @@ function* handleFetchPosts() {
   }
 }
 
+
+/**
+ * fetch postsByCategory
+ * =====================
+ */
+
 function* handleFetchPostsByCategoryIfNeeded() {
-  const isFetching = yield select(makeSelectCurrentPostsCategoryFetching())
-  const hasError = yield select(makeSelectCurrentPostsCategoryError())
+  const isFetching = yield select(makeSelectPostsByCategoryFetching())
+  const hasError = yield select(makeSelectPostsByCategoryError())
   if (isFetching || hasError) {
     return
   }
 
   // check if blog.postsByCategory.currentCategory is already correctly set
-  const categorySlug = yield select(makeSelectCurrentPostsCategorySlug())
-  const currentCategory = yield select(makeSelectCurrentPostsCategory())
+  const categorySlug = yield select(makeSelectPostsByCategoryCurrentCategorySlug())
+  const currentCategory = yield select(makeSelectPostsByCategoryCurrentCategory())
   if (categorySlug === currentCategory.slug) {
     return
   }
@@ -137,7 +157,7 @@ function* handleFetchPostsByCategoryIfNeeded() {
 }
 
 function* handleFetchPostsByCategory() {
-  const categorySlug = yield select(makeSelectCurrentPostsCategorySlug())
+  const categorySlug = yield select(makeSelectPostsByCategoryCurrentCategorySlug())
   const postsByCategoryUrl = `${SERVER_URL}/api/categories/${categorySlug}/`
   const token = yield select(makeSelectToken())
 
@@ -152,20 +172,17 @@ function* handleFetchPostsByCategory() {
   }
 }
 
+/**
+ * watchers
+ * ========
+ */
+
 function* watchFetchPostIfNeeded() {
   yield takeEvery(FETCH_POST_IF_NEEDED, handleFetchPostIfNeeded)
 }
 
-function* watchFetchPost() {
-  yield takeLatest(fetchPost.TRIGGER, handleFetchPost)
-}
-
 function* watchFetchPostsIfNeeded() {
   yield takeEvery(FETCH_POSTS_IF_NEEDED, handleFetchPostsIfNeeded)
-}
-
-function* watchFetchPosts() {
-  yield takeLatest(fetchPosts.TRIGGER, handleFetchPosts)
 }
 
 function* watchFetchPostsByCategoryIfNeeded() {
@@ -174,8 +191,6 @@ function* watchFetchPostsByCategoryIfNeeded() {
 
 export default [
   watchFetchPostIfNeeded,
-  watchFetchPost,
   watchFetchPostsIfNeeded,
-  watchFetchPosts,
   watchFetchPostsByCategoryIfNeeded,
 ]

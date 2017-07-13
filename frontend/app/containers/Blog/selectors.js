@@ -5,37 +5,14 @@ export const selectCurrentPost = (state) => state.blog.currentPost
 export const selectPosts = (state) => state.blog.posts
 export const selectPostsByCategory = (state) => state.blog.postsByCategory
 
-export const makeSelectPostsLastUpdated = () => createSelector(
-  selectPosts,
-  (state) => state.lastUpdated
-)
+/**
+ * currentPost selectors
+ * =====================
+ */
 
-export const makeSelectPostsError = () => createSelector(
-  selectPosts,
-  (state) => state.error
-)
-
-export const makeSelectPostsFetching = () => createSelector(
-  selectPosts,
-  (state) => state.fetching
-)
-
-export const makeSelectPosts = () => createSelector(
-  selectPosts,
-  (state) => state.slugs.map((slug) => state.bySlug[slug])
-)
-
-export const makeSelectPostsBySlugs = () => createSelector(
-  (state, props) => {
-    const postsBySlug = selectPosts(state).bySlug
-    return props.slugs.map((slug) => postsBySlug[slug])
-  },
-  (posts) => posts
-)
-
-export const makeSelectCurrentPostSlug = () => createSelector(
-  selectCurrentPost,
-  (state) => state.slug
+export const makeSelectCurrentPost = () => createSelector(
+  selectBlog,
+  (state) => state.posts.bySlug[state.currentPost.slug]
 )
 
 export const makeSelectCurrentPostError = () => createSelector(
@@ -48,33 +25,67 @@ export const makeSelectCurrentPostFetching = () => createSelector(
   (state) => state.fetching
 )
 
-export const makeSelectCurrentPost = () => createSelector(
-  selectBlog,
-  (state) => {
-    const slug = state.currentPost.slug
-    if (!slug) {
-      return null
-    }
-    return state.posts.bySlug[slug]
-  }
+export const makeSelectCurrentPostSlug = () => createSelector(
+  selectCurrentPost,
+  (state) => state.slug
 )
 
-export const makeSelectCurrentPostsCategoryError = () => createSelector(
+
+/**
+ * postsByCategory selectors
+ * =========================
+ */
+
+export const makeSelectPostsByCategoryCurrentCategory = () => createSelector(
   selectPostsByCategory,
-  (state) => state.error
+  (state) => state.currentCategory
 )
 
-export const makeSelectCurrentPostsCategoryFetching = () => createSelector(
-  selectPostsByCategory,
-  (state) => state.fetching
-)
-
-export const makeSelectCurrentPostsCategorySlug = () => createSelector(
+export const makeSelectPostsByCategoryCurrentCategorySlug = () => createSelector(
   selectPostsByCategory,
   (state) => state.currentCategorySlug
 )
 
-export const makeSelectCurrentPostsCategory = () => createSelector(
+export const makeSelectPostsByCategoryError = () => createSelector(
   selectPostsByCategory,
-  (state) => state.currentCategory
+  (state) => state.error
+)
+
+export const makeSelectPostsByCategoryFetching = () => createSelector(
+  selectPostsByCategory,
+  (state) => state.fetching
+)
+
+
+/**
+ * posts selectors
+ * ===============
+ */
+
+export const makeSelectPosts = () => createSelector(
+  selectPosts,
+  (state) => state.slugs.map((slug) => state.bySlug[slug])
+)
+
+export const makeSelectPostsError = () => createSelector(
+  selectPosts,
+  (state) => state.error
+)
+
+export const makeSelectPostsFetching = () => createSelector(
+  selectPosts,
+  (state) => state.fetching
+)
+
+export const makeSelectPostsLastUpdated = () => createSelector(
+  selectPosts,
+  (state) => state.lastUpdated
+)
+
+export const makeSelectPostsBySlugs = () => createSelector(
+  (state, props) => {
+    const postsBySlug = selectPosts(state).bySlug
+    return props.slugs.map((slug) => postsBySlug[slug])
+  },
+  (posts) => posts
 )
