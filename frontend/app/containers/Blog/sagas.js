@@ -71,7 +71,7 @@ function* handleFetchPostsIfNeeded() {
   const lastUpdated = yield select(makeSelectPostsLastUpdated())
   const now = new Date()
   const posts = yield select(makeSelectPosts())
-  if (!lastUpdated || (!isTruthy(posts) && now - lastUpdated > FIVE_MINUTES)) {
+  if ((!lastUpdated && !isTruthy(posts)) || now - lastUpdated > FIVE_MINUTES) {
     yield call(handleFetchPosts)
   }
 }

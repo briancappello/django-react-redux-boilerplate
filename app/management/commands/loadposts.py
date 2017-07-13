@@ -3,14 +3,13 @@ import frontmatter
 import json
 import markdown
 import os
-import pytz
 import re
 import sys
 import tzlocal
 
-from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
 
+from ...date_utils import parse_datetime, seconds_to_datetime
 from ... import app_settings
 from ...models import Category, Post, Tag, User
 
@@ -87,8 +86,8 @@ class Command(BaseCommand):
 
         post.title = post_data['title']
         post.publish_date = self._get_publish_date(post_file, post_data)
-        post.last_updated = self._seconds_to_datetime(post_file.stat().st_mtime,
-                                                      tzlocal.get_localzone())
+        post.last_updated = seconds_to_datetime(post_file.stat().st_mtime,
+                                                tzlocal.get_localzone())
         post.file_path = post_file.path
         post.created_by = self.admin_user
         post.is_public = self._get_is_public(post_data)
@@ -158,18 +157,12 @@ class Command(BaseCommand):
             output_format='html5'
         )
 
-    def _seconds_to_datetime(self, seconds, tz=None):
-        dt = datetime.datetime.fromtimestamp(seconds)
-        if tz is None:
-            tz = pytz.UTC
-        return tz.localize(dt)
-
     def _datestamp_to_date(self, datestamp):
         if isinstance(datestamp, datetime.date):
             return datestamp
         elif isinstance(datestamp, datetime.datetime):
             return datestamp.date()
-        return datetime.datetime.strptime(datestamp, '%Y-%m-%d').date()
+        return parse_datetime(datestamp).date()
 
     def _frontmatter_to_list(self, string):
         if isinstance(string, (list, tuple)):

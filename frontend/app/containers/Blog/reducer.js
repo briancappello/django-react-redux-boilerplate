@@ -154,19 +154,17 @@ function blogReducer(state = initialState, action) {
       }
 
     case fetchPosts.SUCCESS:
-      const { posts: newPosts } = action.payload
-      const bySlug = {}
-      const slugs = []
-      state.posts.slugs.forEach((slug) => {
-        bySlug[slug] = state.posts.bySlug[slug]
-        slugs.push(slug)
-      })
-      newPosts.forEach((post) => {
-        bySlug[post.slug] = post
-        if (slugs.indexOf(post.slug) === -1) {
-          slugs.push(post.slug)
+      const slugs = state.posts.slugs.slice()
+      const bySlug = Object.assign({}, state.posts.bySlug)
+      const newSlugs = []
+      action.payload.posts.forEach((post) => {
+        // check if this is a new post
+        if (!bySlug[post.slug]) {
+          newSlugs.push(post.slug)
         }
+        bySlug[post.slug] = post
       })
+      slugs.unshift(...newSlugs)
       return {
         ...state,
         posts: {

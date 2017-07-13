@@ -3,10 +3,10 @@ import functools
 
 from django.db import connection, models
 from django.db.models import Q
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.fields import AutoSlugField
 
+from ..date_utils import utcnow
 from .. import app_settings
 from .base import TimeStampMixin, UserAuditMixin
 from .category import Category
@@ -23,9 +23,9 @@ class PostManager(models.Manager):
         """
         if not user or not user.is_authenticated:
             return self.filter(is_public=True,
-                               publish_date__lte=timezone.now())
+                               publish_date__lte=utcnow())
         return self.filter(Q(is_public=True) | Q(created_by=user),
-                           publish_date__lte=timezone.now())
+                           publish_date__lte=utcnow())
 
     def find_prev_next_by_user_and_slug(self, user, slug):
         """
@@ -41,7 +41,7 @@ class PostManager(models.Manager):
                   ROW_NUMBER() OVER (ORDER BY publish_date DESC, last_updated DESC) AS row_number
                 FROM app_post
                 WHERE
-                  publish_date <= %(publish_date)s
+                  publish_date <= %(now)s
                   AND (
                     is_public = %(is_public)s
                     OR
@@ -60,7 +60,7 @@ class PostManager(models.Manager):
                 WHERE slug = %(slug)s
               )
             """, {
-                'publish_date': timezone.now(),
+                'now': utcnow(),
                 'is_public': True,
                 'created_by_id': user.pk if user else None,
                 'slug': slug,

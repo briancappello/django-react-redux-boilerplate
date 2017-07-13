@@ -135,7 +135,10 @@ AUTH_USER_MODEL = 'app.User'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = os.getenv('DJANGO_TIMEZONE', 'UTC')
+# Database time zone
+# Uncomment if your database doesn't support timezones (eg SQLite/MySQL/Oracle)
+# see https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-DATABASE-TIME_ZONE
+# TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
