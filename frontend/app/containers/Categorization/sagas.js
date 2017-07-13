@@ -36,7 +36,7 @@ export function* handleFetchCategories() {
     const response = yield call(authedGet, listCategoriesUrl, token)
     yield put(fetchCategories.success({ categories: response.results }))
   } catch (error) {
-    yield put(fetchCategories.failure({ error }))
+    yield put(fetchCategories.failure({ error: error.response }))
   } finally {
     yield put(fetchCategories.fulfill())
   }

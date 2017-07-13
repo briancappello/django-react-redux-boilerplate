@@ -56,7 +56,7 @@ function* handleFetchPost() {
     const { post, prev, next } = yield call(authedGet, postDetailUrl, token)
     yield put(fetchPost.success({ post, prev, next }))
   } catch (error) {
-    yield put(fetchPost.failure({ error }))
+    yield put(fetchPost.failure({ error: error.response }))
   } finally {
     yield put(fetchPost.fulfill())
   }
@@ -86,7 +86,7 @@ function* handleFetchPosts() {
     const posts = yield call(authedPost, listPostsUrl, token, { lastUpdated })
     yield put(fetchPosts.success({ posts }))
   } catch (error) {
-    yield put(fetchPosts.failure({ error }))
+    yield put(fetchPosts.failure({ error: error.response }))
   } finally {
     yield put(fetchPosts.fulfill())
   }
@@ -133,7 +133,7 @@ function* handleFetchPostsByCategory() {
     const category = yield call(authedGet, postsByCategoryUrl, token)
     yield put(fetchPostsByCategory.success({ category }))
   } catch (error) {
-    yield put(fetchPostsByCategory.failure({ error }))
+    yield put(fetchPostsByCategory.failure({ error: error.response }))
   } finally {
     yield put(fetchPostsByCategory.fulfill())
   }
