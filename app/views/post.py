@@ -16,8 +16,8 @@ from ..serializers import PostSerializer, PostDetailSerializer
 @api_view(['GET', 'POST'])
 @permission_classes((permissions.AllowAny,))
 def list_posts(request):
-    if 'lastUpdated' in request.data:
-        last_updated = parse_datetime(request.data.get('lastUpdated'))
+    if 'last_updated' in request.data:
+        last_updated = parse_datetime(request.data.get('last_updated'))
     else:
         last_updated = datetime.datetime.fromtimestamp(0, pytz.UTC)
     posts = Post.objects.find_all_by_is_public_or_user(request.user).filter(

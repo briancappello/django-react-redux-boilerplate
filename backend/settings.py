@@ -174,15 +174,33 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'knox.auth.TokenAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_PARSER_CLASSES': (
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-    ],
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
     'PAGE_SIZE': 10,
 }
 # disable the web browsable API in production
 if not DEBUG:
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = ('rest_framework.renderers.JSONRenderer',)
-    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = ('knox.auth.TokenAuthentication',)
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+    )
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'] = (
+        'knox.auth.TokenAuthentication',
+    )
+
+# https://github.com/vbabiy/djangorestframework-camel-case
+JSON_CAMEL_CASE = {
+    'RENDERER_CLASS': 'rest_framework.renderers.UnicodeJSONRenderer'
+}
 
 # Rest Knox
 # https://james1345.github.io/django-rest-knox/settings/
