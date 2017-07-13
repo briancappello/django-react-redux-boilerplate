@@ -1,3 +1,5 @@
+import { LOCATION_CHANGE } from 'react-router-redux'
+
 import {
   FETCH_POST_IF_NEEDED,
   SET_CURRENT_POSTS_CATEGORY_SLUG,
@@ -10,6 +12,7 @@ import {
 } from './actions'
 
 import { login, logout } from 'containers/Auth/actions'
+
 
 const initialState = {
   currentPost: {
@@ -41,6 +44,19 @@ const initialState = {
 /* eslint-disable no-shadow */
 function blogReducer(state = initialState, action) {
   switch (action.type) {
+
+    case LOCATION_CHANGE:
+      return { ...state,
+        currentPost: { ...state.currentPost,
+          error: null,
+        },
+        postsByCategory: { ...state.postsByCategory,
+          error: null,
+        },
+        posts: { ...state.posts,
+          error: null,
+        },
+      }
 
     case login.SUCCESS:
     case logout.FULFILL:

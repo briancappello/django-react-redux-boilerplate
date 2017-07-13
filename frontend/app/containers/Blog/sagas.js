@@ -20,12 +20,15 @@ import {
 import {
   makeSelectCurrentPostSlug,
   makeSelectCurrentPost,
+  makeSelectCurrentPostError,
   makeSelectCurrentPostFetching,
   makeSelectPosts,
   makeSelectPostsBySlugs,
   makeSelectPostsLastUpdated,
+  makeSelectPostsError,
   makeSelectPostsFetching,
   makeSelectCurrentPostsCategory,
+  makeSelectCurrentPostsCategoryError,
   makeSelectCurrentPostsCategoryFetching,
   makeSelectCurrentPostsCategorySlug,
 } from './selectors'
@@ -37,7 +40,8 @@ const FIVE_MINUTES = 5 * MINUTE
 
 function* handleFetchPostIfNeeded() {
   const isFetching = yield select(makeSelectCurrentPostFetching())
-  if (isFetching) {
+  const hasError = yield select(makeSelectCurrentPostError())
+  if (isFetching || hasError) {
     return
   }
 
@@ -65,7 +69,8 @@ function* handleFetchPost() {
 
 function* handleFetchPostsIfNeeded() {
   const isFetching = yield select(makeSelectPostsFetching())
-  if (isFetching) {
+  const hasError = yield select(makeSelectPostsError())
+  if (isFetching || hasError) {
     return
   }
 
@@ -95,7 +100,8 @@ function* handleFetchPosts() {
 
 function* handleFetchPostsByCategoryIfNeeded() {
   const isFetching = yield select(makeSelectCurrentPostsCategoryFetching())
-  if (isFetching) {
+  const hasError = yield select(makeSelectCurrentPostsCategoryError())
+  if (isFetching || hasError) {
     return
   }
 

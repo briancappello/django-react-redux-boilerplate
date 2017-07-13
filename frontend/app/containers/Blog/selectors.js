@@ -10,6 +10,11 @@ export const makeSelectPostsLastUpdated = () => createSelector(
   (state) => state.lastUpdated
 )
 
+export const makeSelectPostsError = () => createSelector(
+  selectPosts,
+  (state) => state.error
+)
+
 export const makeSelectPostsFetching = () => createSelector(
   selectPosts,
   (state) => state.fetching
@@ -33,6 +38,11 @@ export const makeSelectCurrentPostSlug = () => createSelector(
   (state) => state.slug
 )
 
+export const makeSelectCurrentPostError = () => createSelector(
+  selectCurrentPost,
+  (state) => state.error
+)
+
 export const makeSelectCurrentPostFetching = () => createSelector(
   selectCurrentPost,
   (state) => state.fetching
@@ -47,6 +57,11 @@ export const makeSelectCurrentPost = () => createSelector(
     }
     return state.posts.bySlug[slug]
   }
+)
+
+export const makeSelectCurrentPostsCategoryError = () => createSelector(
+  selectPostsByCategory,
+  (state) => state.error
 )
 
 export const makeSelectCurrentPostsCategoryFetching = () => createSelector(

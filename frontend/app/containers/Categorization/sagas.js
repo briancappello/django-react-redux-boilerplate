@@ -14,13 +14,15 @@ import {
 
 import {
   makeSelectCategories,
+  makeSelectCategoriesError,
   makeSelectCategoriesFetching,
 } from './selectors'
 
 export function* handleFetchCategoriesIfNeeded() {
   const categories = yield select(makeSelectCategories())
   const isFetching = yield select(makeSelectCategoriesFetching())
-  if (isFetching || (categories && categories.length)) {
+  const hasError = yield select(makeSelectCategoriesError())
+  if (isFetching || hasError || (categories && categories.length)) {
     return
   }
 

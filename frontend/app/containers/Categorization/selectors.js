@@ -2,6 +2,11 @@ import { createSelector } from 'reselect'
 
 export const selectCategories = (state) => state.categorization.categories
 
+export const makeSelectCategoriesError = () => createSelector(
+  selectCategories,
+  (state) => state.error
+)
+
 export const makeSelectCategoriesFetching = () => createSelector(
   selectCategories,
   (state) => state.fetching

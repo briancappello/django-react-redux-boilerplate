@@ -1,6 +1,9 @@
+import { LOCATION_CHANGE } from 'react-router-redux'
+
 import { fetchCategories } from './actions'
 
 import { login, logout } from 'containers/Auth/actions'
+
 
 const initialState = {
   categories: {
@@ -15,6 +18,13 @@ const initialState = {
 /* eslint-disable no-shadow */
 function categorizationReducer(state = initialState, action) {
   switch (action.type) {
+
+    case LOCATION_CHANGE:
+      return { ...state,
+        categories: { ...state.categories,
+          error: null,
+        },
+      }
 
     case login.SUCCESS:
     case logout.FULFILL:
