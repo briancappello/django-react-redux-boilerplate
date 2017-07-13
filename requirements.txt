@@ -13,6 +13,7 @@ Markdown==2.6.8
 psycopg2==2.7.1
 pycparser==2.17
 pyOpenSSL==17.0.0
+python-dateutil==2.6.1
 python-frontmatter==0.4.2
 pytz==2017.2
 PyYAML==3.12
