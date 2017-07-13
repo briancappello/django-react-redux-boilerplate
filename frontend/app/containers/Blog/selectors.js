@@ -49,6 +49,11 @@ export const makeSelectCurrentPost = () => createSelector(
   }
 )
 
+export const makeSelectCurrentPostsCategoryFetching = () => createSelector(
+  selectPostsByCategory,
+  (state) => state.fetching
+)
+
 export const makeSelectCurrentPostsCategorySlug = () => createSelector(
   selectPostsByCategory,
   (state) => state.currentCategorySlug

@@ -8,9 +8,10 @@ import { createStructuredSelector } from 'reselect'
 import { bindActionCreators } from 'redux'
 import { connect } from 'utils'
 
-import { Row, Col } from 'react-bootstrap'
-import { PostPreview } from 'components/PostPreview'
-import Categories from 'containers/Categorization/Categories'
+import Blog from 'components/Blog'
+
+import { fetchCategoriesIfNeeded } from 'containers/Categorization/actions'
+import { makeSelectCategories } from 'containers/Categorization/selectors'
 
 import { fetchPostsIfNeeded } from 'containers/Blog/actions'
 import { makeSelectPosts } from 'containers/Blog/selectors'
@@ -18,47 +19,49 @@ import { makeSelectPosts } from 'containers/Blog/selectors'
 export class HomePage extends React.Component {
 
   static propTypes = {
+    categories: PropTypes.arrayOf(PropTypes.object),
+    fetchCategoriesIfNeeded: PropTypes.func,
     fetchPostsIfNeeded: PropTypes.func,
     posts: PropTypes.arrayOf(PropTypes.object),
   }
 
   static mapStateToProps = createStructuredSelector({
+    categories: makeSelectCategories(),
     posts: makeSelectPosts(),
   })
 
   static mapDispatchToProps = (dispatch) => ({
-    ...bindActionCreators({ fetchPostsIfNeeded }, dispatch),
+    ...bindActionCreators({
+      fetchCategoriesIfNeeded,
+      fetchPostsIfNeeded,
+    }, dispatch),
   })
 
   componentWillMount() {
-    this.props.fetchPostsIfNeeded()
+    this.fetchDataIfNeeded()
   }
 
   componentWillUpdate() {
+    this.fetchDataIfNeeded()
+  }
+
+  fetchDataIfNeeded() {
     this.props.fetchPostsIfNeeded()
+    this.props.fetchCategoriesIfNeeded()
   }
 
   render() {
-    const { posts } = this.props
+    const { categories, posts } = this.props
     return (
-      <article>
+      <div>
         <Helmet
           title="Home Page"
           meta={[
             { name: 'description', content: 'A React.js Boilerplate application homepage' },
           ]}
         />
-        <Row>
-          <Col md={9} xs={12}>
-            <h1>Latest Posts</h1>
-            {posts.map((post) => <PostPreview post={post} key={post.slug} />)}
-          </Col>
-          <Col md={3} xs={12}>
-            <h2>Categories</h2>
-            <Categories />
-          </Col>
-        </Row>
-      </article>
+        <Blog categories={categories} posts={posts} />
+      </div>
     )
   }
 }

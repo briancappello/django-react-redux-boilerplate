@@ -1,64 +1,70 @@
 import React, { PropTypes } from 'react'
+import Helmet from 'react-helmet'
 import { connect } from 'utils'
 import { createStructuredSelector } from 'reselect'
 import { bindActionCreators } from 'redux'
 
-import { PostPreview } from 'components/PostPreview'
+import Blog from 'components/Blog'
 
 import {
-  setCurrentPostsCategorySlug,
   fetchPostsByCategoryIfNeeded,
-} from 'containers/Blog/actions'
-
+  setCurrentPostsCategorySlug,
+} from './actions'
 import { makeSelectCurrentPostsCategory } from './selectors'
+
+import { fetchCategoriesIfNeeded } from 'containers/Categorization/actions'
+import { makeSelectCategories } from 'containers/Categorization/selectors'
 
 export class CategoryPosts extends React.Component {
 
   static propTypes = {
-    category: PropTypes.shape({
+    categories: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string,
+      posts: PropTypes.array,
+    })),
+    currentCategory: PropTypes.shape({
       name: PropTypes.string,
       posts: PropTypes.array,
     }),
+    fetchCategoriesIfNeeded: PropTypes.func,
     fetchPostsByCategoryIfNeeded: PropTypes.func,
     setCurrentPostsCategorySlug: PropTypes.func,
   }
 
   static mapStateToProps = createStructuredSelector({
-    category: makeSelectCurrentPostsCategory(),
+    categories: makeSelectCategories(),
+    currentCategory: makeSelectCurrentPostsCategory(),
   })
 
   static mapDispatchToProps = (dispatch) => ({
     ...bindActionCreators({
+      fetchCategoriesIfNeeded,
       fetchPostsByCategoryIfNeeded,
       setCurrentPostsCategorySlug,
     }, dispatch),
   })
 
   componentWillMount() {
-    this.fetchPostsByCategoryIfNeeded(this.props)
+    this.fetchDataIfNeeded(this.props)
   }
 
   componentWillUpdate(nextProps) {
-    this.fetchPostsByCategoryIfNeeded(nextProps)
+    this.fetchDataIfNeeded(nextProps)
   }
 
-  fetchPostsByCategoryIfNeeded(props) {
+  fetchDataIfNeeded(props) {
     const { routeParams: { slug } } = props
     this.props.setCurrentPostsCategorySlug(slug)
+    this.props.fetchCategoriesIfNeeded()
     this.props.fetchPostsByCategoryIfNeeded(slug)
   }
 
   render() {
-    const { category } = this.props
-    const { posts } = category
-    if (!posts) {
-      return <div><h1>Loading...</h1></div>
-    }
-
+    const { categories, currentCategory } = this.props
     return (
       <div>
-        <h1>{category.name} Posts</h1>
-        {posts.map((post) => <PostPreview post={post} key={post.slug} />)}
+        <Helmet title={`Latest ${currentCategory.name} Category Posts`} />
+        <Blog categories={categories} currentCategory={currentCategory} posts={currentCategory.posts} />
       </div>
     )
   }

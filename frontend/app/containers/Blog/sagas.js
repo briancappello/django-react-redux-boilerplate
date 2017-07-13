@@ -26,6 +26,7 @@ import {
   makeSelectPostsLastUpdated,
   makeSelectPostsFetching,
   makeSelectCurrentPostsCategory,
+  makeSelectCurrentPostsCategoryFetching,
   makeSelectCurrentPostsCategorySlug,
 } from './selectors'
 
@@ -93,19 +94,25 @@ function* handleFetchPosts() {
 }
 
 function* handleFetchPostsByCategoryIfNeeded() {
-  const categorySlug = yield select(makeSelectCurrentPostsCategorySlug())
+  const isFetching = yield select(makeSelectCurrentPostsCategoryFetching())
+  if (isFetching) {
+    return
+  }
 
   // check if blog.postsByCategory.currentCategory is already correctly set
-  let category = yield select(makeSelectCurrentPostsCategory())
-  if (categorySlug === category.slug) {
+  const categorySlug = yield select(makeSelectCurrentPostsCategorySlug())
+  const currentCategory = yield select(makeSelectCurrentPostsCategory())
+  if (categorySlug === currentCategory.slug) {
     return
   }
 
   // otherwise try to pull the category from categorization.categories
-  category = yield select(makeSelectCategoryBySlug(), { slug: categorySlug })
+  const category = yield select(makeSelectCategoryBySlug(), { slug: categorySlug })
   if (category && category.posts && category.posts.length) {
     // check if its posts data has already been populated
     if (isObject(category.posts[0])) {
+      yield put(fetchPostsByCategory.success({ category }))
+      yield put(fetchPostsByCategory.fulfill())
       return
     }
 
