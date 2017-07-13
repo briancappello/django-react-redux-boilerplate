@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect'
-import { isTruthy } from 'utils/types'
 
 export const selectCategories = (state) => state.categorization.categories
 
@@ -10,15 +9,7 @@ export const makeSelectCategoriesFetching = () => createSelector(
 
 export const makeSelectCategories = () => createSelector(
   selectCategories,
-  (state) => {
-    const slugs = state.slugs
-    if (!isTruthy(slugs)) {
-      return []
-    }
-
-    const bySlug = state.bySlug
-    return slugs.map((slug) => bySlug[slug])
-  }
+  (state) => state.slugs.map((slug) => state.bySlug[slug])
 )
 
 export const makeSelectCategoryBySlug = () => createSelector(
