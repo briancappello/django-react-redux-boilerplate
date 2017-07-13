@@ -44,17 +44,13 @@ function blogReducer(state = initialState, action) {
 
     case login.SUCCESS:
     case logout.FULFILL:
-      return {
-        ...state,
-        postsByCategory: {
-          ...state.postsByCategory,
-          currentCategory: {
-            ...state.postsByCategory.currentCategory,
+      return { ...state,
+        postsByCategory: { ...state.postsByCategory,
+          currentCategory: { ...state.postsByCategory.currentCategory,
             posts: [],
           },
         },
-        posts: {
-          ...state.posts,
+        posts: { ...state.posts,
           slugs: [],
           bySlug: {},
           lastUpdated: new Date(0),
@@ -62,37 +58,29 @@ function blogReducer(state = initialState, action) {
       }
 
     case SET_CURRENT_POSTS_CATEGORY_SLUG:
-      return {
-        ...state,
-        postsByCategory: {
-          ...state.postsByCategory,
+      return { ...state,
+        postsByCategory: { ...state.postsByCategory,
           currentCategorySlug: action.payload.slug,
         },
       }
 
     case FETCH_POST_IF_NEEDED:
-      return {
-        ...state,
-        currentPost: {
-          ...state.currentPost,
+      return { ...state,
+        currentPost: { ...state.currentPost,
           slug: action.payload.slug,
         },
       }
 
     case fetchPost.TRIGGER:
-      return {
-        ...state,
-        currentPost: {
-          ...state.currentPost,
+      return { ...state,
+        currentPost: { ...state.currentPost,
           loading: true,
         },
       }
 
     case fetchPost.REQUEST:
-      return {
-        ...state,
-        currentPost: {
-          ...state.currentPost,
+      return { ...state,
+        currentPost: { ...state.currentPost,
           loading: true,
           fetching: true,
         },
@@ -104,50 +92,39 @@ function blogReducer(state = initialState, action) {
       post.next = next
       post.publishDate = new Date(post.publishDate)
       post.lastUpdated = new Date(post.lastUpdated)
-      return {
-        ...state,
-        posts: {
-          ...state.posts,
-          bySlug: {
-            ...state.posts.bySlug,
+      return { ...state,
+        posts: { ...state.posts,
+          bySlug: { ...state.posts.bySlug,
             [post.slug]: post,
           },
         },
       }
 
     case fetchPost.FAILURE:
-      return {
-        ...state,
-        currentPost: {
-          ...state.currentPost,
+      return { ...state,
+        currentPost: { ...state.currentPost,
           error: action.payload.error,
         },
       }
 
     case fetchPost.FULFILL:
-      return {
-        ...state,
-        currentPost: {
-          ...state.currentPost,
+      return { ...state,
+        currentPost: { ...state.currentPost,
           fetching: false,
           loading: false,
         },
       }
 
     case fetchPosts.TRIGGER:
-      return {
-        ...state,
-        posts: {
-          ...state.posts,
+      return { ...state,
+        posts: { ...state.posts,
           loading: true,
         },
       }
 
     case fetchPosts.REQUEST:
-      return {
-        ...state,
-        posts: {
-          ...state.posts,
+      return { ...state,
+        posts: { ...state.posts,
           loading: true,
           fetching: true,
         },
@@ -165,10 +142,8 @@ function blogReducer(state = initialState, action) {
         bySlug[post.slug] = post
       })
       slugs.unshift(...newSlugs)
-      return {
-        ...state,
-        posts: {
-          ...state.posts,
+      return { ...state,
+        posts: { ...state.posts,
           bySlug,
           slugs,
           lastUpdated: new Date(),
@@ -176,65 +151,52 @@ function blogReducer(state = initialState, action) {
       }
 
     case fetchPosts.FAILURE:
-      return {
-        ...state,
-        posts: {
-          ...state.posts,
+      return { ...state,
+        posts: { ...state.posts,
           error: action.payload.error,
+          lastUpdated: new Date(),
         },
       }
 
     case fetchPosts.FULFILL:
-      return {
-        ...state,
-        posts: {
-          ...state.posts,
+      return { ...state,
+        posts: { ...state.posts,
           loading: false,
           fetching: false,
         },
       }
 
     case fetchPostsByCategory.TRIGGER:
-      return {
-        ...state,
-        postsByCategory: {
-          ...state.postsByCategory,
+      return { ...state,
+        postsByCategory: { ...state.postsByCategory,
           loading: true,
         },
       }
     case fetchPostsByCategory.REQUEST:
-      return {
-        ...state,
-        postsByCategory: {
-          ...state.postsByCategory,
+      return { ...state,
+        postsByCategory: { ...state.postsByCategory,
           loading: true,
           fetching: true,
         },
       }
 
     case fetchPostsByCategory.SUCCESS:
-      return {
-        ...state,
-        postsByCategory: {
-          ...state.postsByCategory,
+      return { ...state,
+        postsByCategory: { ...state.postsByCategory,
           currentCategory: action.payload.category,
         },
       }
 
     case fetchPostsByCategory.FAILURE:
-      return {
-        ...state,
-        postsByCategory: {
-          ...state.postsByCategory,
+      return { ...state,
+        postsByCategory: { ...state.postsByCategory,
           error: action.payload.error,
         },
       }
 
     case fetchPostsByCategory.FULFILL:
-      return {
-        ...state,
-        postsByCategory: {
-          ...state.postsByCategory,
+      return { ...state,
+        postsByCategory: { ...state.postsByCategory,
           loading: false,
           fetching: false,
         },

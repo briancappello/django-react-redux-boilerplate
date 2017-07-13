@@ -16,15 +16,13 @@ export default function authReducer(state = initialState, action) {
 
     case login.SUCCESS:
       const { user, token } = action.payload
-      return {
-        ...state,
+      return { ...state,
         user,
         token,
       }
 
     case logout.FULFILL:
-      return {
-        ...state,
+      return { ...state,
         user: null,
         token: null,
       }

@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect'
-import { isTruthy } from 'utils/types'
 
 export const selectBlog = (state) => state.blog
 export const selectCurrentPost = (state) => state.blog.currentPost
@@ -18,15 +17,7 @@ export const makeSelectPostsFetching = () => createSelector(
 
 export const makeSelectPosts = () => createSelector(
   selectPosts,
-  (state) => {
-    const slugs = state.slugs
-    if (!isTruthy(slugs)) {
-      return []
-    }
-
-    const bySlug = state.bySlug
-    return slugs.map((slug) => bySlug[slug])
-  }
+  (state) => state.slugs.map((slug) => state.bySlug[slug])
 )
 
 export const makeSelectPostsBySlugs = () => createSelector(
