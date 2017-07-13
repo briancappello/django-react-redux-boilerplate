@@ -5,7 +5,7 @@ import { SERVER_URL } from 'config'
 import { post, authedPost } from 'utils/request'
 
 import { login, logout } from './actions'
-import { selectToken } from './selectors'
+import { makeSelectToken } from './selectors'
 
 export function* handleLogin({ payload }) {
   const loginUrl = `${SERVER_URL}/api/auth/login/`
@@ -30,7 +30,7 @@ export function* handleLogin({ payload }) {
 
 export function* handleLogout() {
   const logoutUrl = `${SERVER_URL}/api/auth/logout/`
-  const token = yield select(selectToken())
+  const token = yield select(makeSelectToken())
 
   // logout client-side regardless of server success/failure
   _removeUserToken()

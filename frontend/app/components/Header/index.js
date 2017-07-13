@@ -3,7 +3,7 @@ import { connect } from 'utils'
 import { Link } from 'react-router'
 import { bindRoutineCreators } from 'redux-saga-routines'
 import { createStructuredSelector } from 'reselect'
-import { selectToken } from 'containers/Auth/selectors'
+import { makeSelectToken } from 'containers/Auth/selectors'
 import { logout } from 'containers/Auth/actions'
 import { BRAND } from 'config'
 
@@ -19,7 +19,7 @@ export class Header extends React.Component {
   }
 
   static mapStateToProps = createStructuredSelector({
-    token: selectToken(),
+    token: makeSelectToken(),
   })
 
   static mapDispatchToProps = (dispatch) => ({

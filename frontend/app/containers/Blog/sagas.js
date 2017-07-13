@@ -3,7 +3,7 @@ import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 import { SERVER_URL } from 'config'
 import { isObject, isTruthy } from 'utils/types'
 import { authedGet, authedPost } from 'utils/request'
-import { selectToken } from 'containers/Auth/selectors'
+import { makeSelectToken } from 'containers/Auth/selectors'
 
 import {
   fetchPost,
@@ -53,7 +53,7 @@ function* handleFetchPostIfNeeded() {
 
 function* handleFetchPost() {
   const slug = yield select(makeSelectCurrentPostSlug())
-  const token = yield select(selectToken())
+  const token = yield select(makeSelectToken())
   const postDetailUrl = `${SERVER_URL}/api/posts/${slug}/`
 
   try {
@@ -84,7 +84,7 @@ function* handleFetchPostsIfNeeded() {
 
 function* handleFetchPosts() {
   const listPostsUrl = `${SERVER_URL}/api/posts/`
-  const token = yield select(selectToken())
+  const token = yield select(makeSelectToken())
   const lastUpdated = yield select(makeSelectPostsLastUpdated())
 
   try {
@@ -139,7 +139,7 @@ function* handleFetchPostsByCategoryIfNeeded() {
 function* handleFetchPostsByCategory() {
   const categorySlug = yield select(makeSelectCurrentPostsCategorySlug())
   const postsByCategoryUrl = `${SERVER_URL}/api/categories/${categorySlug}/`
-  const token = yield select(selectToken())
+  const token = yield select(makeSelectToken())
 
   try {
     yield put(fetchPostsByCategory.request())

@@ -2,7 +2,7 @@ import { takeEvery, call, put, select } from 'redux-saga/effects'
 
 import { SERVER_URL } from 'config'
 import { authedGet } from 'utils/request'
-import { selectToken } from 'containers/Auth/selectors'
+import { makeSelectToken } from 'containers/Auth/selectors'
 
 import {
   FETCH_CATEGORIES_IF_NEEDED,
@@ -31,7 +31,7 @@ export function* handleFetchCategoriesIfNeeded() {
 
 export function* handleFetchCategories() {
   const listCategoriesUrl = `${SERVER_URL}/api/categories/`
-  const token = yield select(selectToken())
+  const token = yield select(makeSelectToken())
 
   try {
     yield put(fetchCategories.request())

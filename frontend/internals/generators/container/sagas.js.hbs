@@ -2,13 +2,12 @@ import { takeLatest, call, put, select } from 'redux-saga/effects'
 
 import { SERVER_URL } from 'config'
 import { authedGet, authedPost } from 'utils/request'
-import { selectToken } from 'containers/Auth/selectors'
+import { makeSelectToken } from 'containers/Auth/selectors'
 
-export function* defaultWatchSaga() {
-  // See example in containers/HomePage/sagas.js
+export function* defaultSaga() {
+  // See example in containers/Blog/sagas.js
 }
 
-// export all sagas to be loaded
 export default [
   defaultSaga,
 ]
