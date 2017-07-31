@@ -22,6 +22,12 @@ def get_boolean_env(name, default):
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+LOG_DIR = os.path.dirname(os.getenv('DJANGO_LOG_FILE')) \
+          if os.getenv('DJANGO_LOG_FILE') else os.path.join(BASE_DIR, 'log')
+
+if not os.path.exists(LOG_DIR):
+    os.mkdir(LOG_DIR)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -267,7 +273,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': os.getenv('DJANGO_LOG_FILE',
-                                  os.path.join(BASE_DIR, 'debug.log')),
+                                  os.path.join(LOG_DIR, 'debug.log')),
         },
         'email_admins': {
             'level': 'ERROR',
