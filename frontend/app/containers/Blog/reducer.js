@@ -26,7 +26,9 @@ const initialState = {
     currentCategory: {
       name: null,
       posts: [],
+      tags: [],
     },
+    currentTagSlug: null,
     loading: false,
     fetching: false,
     error: null,
@@ -64,6 +66,7 @@ function blogReducer(state = initialState, action) {
         postsByCategory: { ...state.postsByCategory,
           currentCategory: { ...state.postsByCategory.currentCategory,
             posts: [],
+            tags: [],
           },
         },
         posts: { ...state.posts,

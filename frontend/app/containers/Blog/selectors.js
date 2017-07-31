@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect'
 
-export const selectBlog = (state) => state.blog
+import { selectCategories, selectTags } from 'containers/Categorization/selectors'
+
 export const selectCurrentPost = (state) => state.blog.currentPost
 export const selectPosts = (state) => state.blog.posts
 export const selectPostsByCategory = (state) => state.blog.postsByCategory
@@ -11,8 +12,8 @@ export const selectPostsByCategory = (state) => state.blog.postsByCategory
  */
 
 export const makeSelectCurrentPost = () => createSelector(
-  selectBlog,
-  (state) => state.posts.bySlug[state.currentPost.slug]
+  [selectCurrentPost, selectPosts],
+  (currentPost, posts) => posts.bySlug[currentPost.slug]
 )
 
 export const makeSelectCurrentPostError = () => createSelector(
@@ -63,8 +64,8 @@ export const makeSelectPostsByCategoryFetching = () => createSelector(
  */
 
 export const makeSelectPosts = () => createSelector(
-  selectPosts,
-  (state) => state.slugs.map((slug) => state.bySlug[slug])
+  [selectPosts, selectCategories, selectTags],
+  (posts, categories, tags) => _populatePosts(posts.slugs.map((slug) => posts.bySlug[slug]), categories, tags)
 )
 
 export const makeSelectPostsError = () => createSelector(
@@ -84,8 +85,27 @@ export const makeSelectPostsLastUpdated = () => createSelector(
 
 export const makeSelectPostsBySlugs = () => createSelector(
   (state, props) => {
-    const postsBySlug = selectPosts(state).bySlug
-    return props.slugs.map((slug) => postsBySlug[slug])
+    const posts = selectPosts(state)
+    const categories = selectCategories(state)
+    const tags = selectTags(state)
+    return _populatePosts(props.slugs.map((slug) => posts.bySlug[slug]), categories, tags)
   },
   (posts) => posts
 )
+
+export const _populatePosts = (posts, categories, tags) => posts.map((post) => {
+  return _populatePost(post, categories, tags)
+})
+
+export const _populatePost = (post, categories, tags) => {
+  if (!post || post.html) {
+    return post
+  }
+
+  const populated = { ...post }
+  populated.category = categories.bySlug[post.category]
+  if (post.tags.length) {
+    populated.tags = post.tags.map((tagSlug) => tags.bySlug[tagSlug])
+  }
+  return populated
+}

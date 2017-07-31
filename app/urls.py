@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'api/categories/(?P<slug>[\w\d-]+)/$', views.CategoryDetailView.as_view(), name='view_category'),
     url(r'api/posts/$', views.list_posts, name='list_posts'),
     url(r'api/posts/(?P<slug>[\w\d-]+)/$', views.view_post, name='view_post'),
+    url(r'api/tags/$', views.TagListView.as_view(), name='list_tags'),
     url(r'api/', include(router.urls)),
 ]

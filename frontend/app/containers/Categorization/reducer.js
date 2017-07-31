@@ -1,6 +1,6 @@
 import { LOCATION_CHANGE } from 'react-router-redux'
 
-import { fetchCategories } from './actions'
+import { fetchCategories, fetchTags } from './actions'
 
 import { login, logout } from 'containers/Auth/actions'
 
@@ -13,15 +13,28 @@ const initialState = {
     fetching: false,
     error: null,
   },
+  tags: {
+    slugs: [],
+    bySlug: {},
+    loading: false,
+    fetching: false,
+    error: null,
+  },
 }
 
 /* eslint-disable no-shadow */
 function categorizationReducer(state = initialState, action) {
+  const slugs = []
+  const bySlug = {}
+
   switch (action.type) {
 
     case LOCATION_CHANGE:
       return { ...state,
         categories: { ...state.categories,
+          error: null,
+        },
+        tags: { ...state.tags,
           error: null,
         },
       }
@@ -33,14 +46,17 @@ function categorizationReducer(state = initialState, action) {
           slugs: [],
           bySlug: {},
         },
-      }
-
-    case fetchCategories.TRIGGER:
-      return { ...state,
-        categories: { ...state.categories,
-          loading: true,
+        tags: { ...state.tags,
+          slugs: [],
+          bySlug: {},
         },
       }
+
+
+    /**
+     * fetch categories
+     * ================
+     */
 
     case fetchCategories.REQUEST:
       return { ...state,
@@ -51,10 +67,7 @@ function categorizationReducer(state = initialState, action) {
       }
 
     case fetchCategories.SUCCESS:
-      const { categories } = action.payload
-      const slugs = []
-      const bySlug = {}
-      categories.forEach((category) => {
+      action.payload.categories.forEach((category) => {
         slugs.push(category.slug)
         bySlug[category.slug] = category
       })
@@ -75,6 +88,47 @@ function categorizationReducer(state = initialState, action) {
     case fetchCategories.FULFILL:
       return { ...state,
         categories: { ...state.categories,
+          loading: false,
+          fetching: false,
+        },
+      }
+
+
+    /**
+     * fetch tags
+     * ==========
+     */
+
+    case fetchTags.REQUEST:
+      return { ...state,
+        tags: { ...state.tags,
+          loading: true,
+          fetching: true,
+        },
+      }
+
+    case fetchTags.SUCCESS:
+      action.payload.tags.forEach((tag) => {
+        slugs.push(tag.slug)
+        bySlug[tag.slug] = tag
+      })
+      return { ...state,
+        tags: { ...state.tags,
+          slugs,
+          bySlug,
+        },
+      }
+
+    case fetchTags.FAILURE:
+      return { ...state,
+        tags: { ...state.tags,
+          error: action.payload.error,
+        },
+      }
+
+    case fetchTags.FULFILL:
+      return { ...state,
+        tags: { ...state.tags,
           loading: false,
           fetching: false,
         },

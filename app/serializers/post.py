@@ -16,7 +16,8 @@ class PostSerializer(serializers.ModelSerializer):
         fields = POST_LIST_FIELDS
 
 
-class PostDetailSerializer(PostSerializer):
+class PostDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = POST_LIST_FIELDS + ('html',)
+        depth = 1

@@ -10,8 +10,15 @@ import { connect } from 'utils'
 
 import Blog from 'components/Blog'
 
-import { fetchCategoriesIfNeeded } from 'containers/Categorization/actions'
-import { makeSelectCategories } from 'containers/Categorization/selectors'
+import {
+  fetchCategoriesIfNeeded,
+  fetchTagsIfNeeded,
+} from 'containers/Categorization/actions'
+
+import {
+  makeSelectCategories,
+  makeSelectTags,
+} from 'containers/Categorization/selectors'
 
 import { fetchPostsIfNeeded } from 'containers/Blog/actions'
 import { makeSelectPosts } from 'containers/Blog/selectors'
@@ -22,18 +29,22 @@ export class HomePage extends React.Component {
     categories: PropTypes.arrayOf(PropTypes.object),
     fetchCategoriesIfNeeded: PropTypes.func,
     fetchPostsIfNeeded: PropTypes.func,
+    fetchTagsIfNeeded: PropTypes.func,
     posts: PropTypes.arrayOf(PropTypes.object),
+    tags: PropTypes.arrayOf(PropTypes.object),
   }
 
   static mapStateToProps = createStructuredSelector({
     categories: makeSelectCategories(),
     posts: makeSelectPosts(),
+    tags: makeSelectTags(),
   })
 
   static mapDispatchToProps = (dispatch) => ({
     ...bindActionCreators({
       fetchCategoriesIfNeeded,
       fetchPostsIfNeeded,
+      fetchTagsIfNeeded,
     }, dispatch),
   })
 
@@ -48,10 +59,11 @@ export class HomePage extends React.Component {
   fetchDataIfNeeded() {
     this.props.fetchPostsIfNeeded()
     this.props.fetchCategoriesIfNeeded()
+    this.props.fetchTagsIfNeeded()
   }
 
   render() {
-    const { categories, posts } = this.props
+    const { categories, posts, tags } = this.props
     return (
       <div>
         <Helmet
@@ -60,7 +72,7 @@ export class HomePage extends React.Component {
             { name: 'description', content: 'A React.js Boilerplate application homepage' },
           ]}
         />
-        <Blog categories={categories} posts={posts} />
+        <Blog categories={categories} posts={posts} tags={tags} />
       </div>
     )
   }

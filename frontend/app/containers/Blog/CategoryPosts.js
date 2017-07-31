@@ -64,7 +64,7 @@ export class CategoryPosts extends React.Component {
     return (
       <div>
         <Helmet title={`Latest ${currentCategory.name} Category Posts`} />
-        <Blog categories={categories} currentCategory={currentCategory} posts={currentCategory.posts} />
+        <Blog categories={categories} currentCategory={currentCategory} posts={currentCategory.posts} tags={currentCategory.tags} />
       </div>
     )
   }

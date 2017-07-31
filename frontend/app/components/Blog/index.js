@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 
 import { Row, Col } from 'react-bootstrap'
-import { PostPreview } from 'components/PostPreview'
+import PostPreview from 'components/PostPreview'
 import Categories from 'components/Categories'
 
 export default class Blog extends React.Component {
