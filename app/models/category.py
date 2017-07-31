@@ -23,7 +23,6 @@ class Category(models.Model):
     slug = AutoSlugField(_('Slug'), populate_from='name')
 
     # posts = implicit OneToMany(Post)
-    # tags = implicit OneToMany(Tag)
 
     class Meta:
         ordering = ('name',)
