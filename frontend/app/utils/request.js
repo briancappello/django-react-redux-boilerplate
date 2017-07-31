@@ -12,6 +12,18 @@ import * as Cookies from 'js-cookie'
 export function request(url, options) {
   return fetch(url, options)
     .then(_checkStatusAndParseJSON)
+    .catch((e) => {
+      // should only end up here if the backend has gone away
+      return new Promise((_, reject) => {
+        // eslint-disable-next-line no-param-reassign
+        e.response = {
+          status: -1,
+          statusText: e.message,
+          error: e.message,
+        }
+        reject(e)
+      })
+    })
 }
 
 export function get(url, options = {}) {
