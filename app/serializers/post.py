@@ -1,15 +1,15 @@
 from rest_framework import serializers
 
-from ..models import Category, Post, Tag
+from ..models import Post
 
 POST_LIST_FIELDS = ('id', 'slug', 'title', 'preview',
                     'publish_date', 'last_updated',
-                    'categories', 'tags')
+                    'category', 'tags')
 
 
 class PostSerializer(serializers.ModelSerializer):
-    categories = serializers.PrimaryKeyRelatedField(many=True, queryset=Category.objects.all())
-    tags = serializers.PrimaryKeyRelatedField(many=True, queryset=Tag.objects.all())
+    category = serializers.SlugRelatedField(read_only=True, slug_field='slug')
+    tags = serializers.SlugRelatedField(many=True, read_only=True, slug_field='slug')
 
     class Meta:
         model = Post

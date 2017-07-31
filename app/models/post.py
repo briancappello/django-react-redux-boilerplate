@@ -89,7 +89,13 @@ class Post(TimeStampMixin, UserAuditMixin, models.Model):
     is_public = models.BooleanField(default=True)
     html = models.TextField(_('HTML'))
 
-    categories = models.ManyToManyField(Category, related_name='posts')
+    # on delete of category, set post.category_id to NULL
+    category = models.ForeignKey(Category,
+                                 on_delete=models.SET_NULL,
+                                 null=True,
+                                 blank=True,
+                                 related_name='posts')
+
     tags = models.ManyToManyField(Tag, related_name='posts')
 
     class Meta:

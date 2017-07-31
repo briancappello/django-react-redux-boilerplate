@@ -22,7 +22,7 @@ class Category(models.Model):
     name = models.CharField(_('Name'), max_length=30)
     slug = AutoSlugField(_('Slug'), populate_from='name')
 
-    # posts = implicit ManyToMany(Post)
+    # posts = implicit OneToMany(Post)
     # tags = implicit OneToMany(Tag)
 
     class Meta:

@@ -52,7 +52,7 @@ class Command(BaseCommand):
 
             post, is_create = self._get_or_create_post(post_file, post_data)
 
-            post.categories = self._get_or_create_categories(post_data)
+            post.category = self._get_or_create_category(post_data)
             post.tags = self._get_or_create_tags(post_data)
             post.save()
 
@@ -96,25 +96,19 @@ class Command(BaseCommand):
 
         return post, is_create
 
-    def _get_or_create_categories(self, post_data):
-        if 'category' in post_data.metadata:
-            names = post_data['category']
-        elif 'categories' in post_data.metadata:
-            names = post_data['categories']
-        else:
-            return []
+    def _get_or_create_category(self, post_data):
+        if 'category' not in post_data.metadata:
+            return None
 
-        categories = []
-        for name in self._frontmatter_to_list(names):
-            name = name.strip()
-            try:
-                categories.append(Category.objects.get(name__iexact=name))
-            except Category.DoesNotExist:
-                self.stdout.write('Creating Category: {}'.format(name.title()))
-                category = Category(name=name.title())
-                category.save()
-                categories.append(category)
-        return categories
+        category_name = post_data['category'].strip().title()
+        try:
+            category = Category.objects.get(name__iexact=category_name)
+        except Category.DoesNotExist:
+            self.stdout.write('Creating Category: {}'.format(category_name))
+            category = Category(name=category_name)
+            category.save()
+
+        return category
 
     def _get_or_create_tags(self, post_data):
         if 'tag' in post_data.metadata:
@@ -133,6 +127,7 @@ class Command(BaseCommand):
                 tag = Tag(name=name.title())
                 tag.save()
                 tags.append(tag)
+
         return tags
 
     def _get_publish_date(self, post_file, post_data):
